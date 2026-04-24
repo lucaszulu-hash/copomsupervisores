@@ -3,77 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COPOM Supervisores - Mesa de Operações</title>
+    <title>COPOM Supervisores - Sistema Integrado</title>
     <style>
         :root {
             --primary-color: #1a202c; --secondary-color: #2b6cb0; 
             --bg-color: #f0f2f5; --text-color: #2d3748;
+            --cfp-bg: #fee2e2; --cfp-text: #b91c1c;
+            --cgp-bg: #f0fdf4; --cgp-text: #166534;
         }
 
         body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); display: flex; height: 100vh; overflow: hidden; }
 
         /* TELA DE LOGIN */
-        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; }
-        .login-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; width: 320px; color: #2d3748; }
+        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; transition: 0.3s opacity; }
+        .login-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; width: 300px; color: #2d3748; }
         .login-box input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 5px; box-sizing: border-box; }
-        .login-box button { width: 100%; padding: 12px; background-color: #2b6cb0; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .login-box button { width: 100%; padding: 12px; background-color: #2b6cb0; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; }
 
-        /* TELA DE SELEÇÃO DE POSTO (MESA DE OPERAÇÕES) */
-        #role-selection-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26, 32, 44, 0.98); z-index: 9998; display: none; justify-content: center; align-items: center; color: white; flex-direction: column; }
-        .role-box { background: white; color: #2d3748; padding: 30px; border-radius: 12px; width: 450px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
-        .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; max-height: 400px; overflow-y: auto; padding: 10px; border: 1px solid #edf2f7; border-radius: 8px; }
-        .role-item { padding: 15px; border: 1px solid #e2e8f0; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.2s; text-align: left;}
+        /* MESA DE OPERAÇÕES (SELEÇÃO DE POSTO) */
+        #role-selection-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26, 32, 44, 0.98); z-index: 9998; justify-content: center; align-items: center; color: white; flex-direction: column; }
+        .role-box { background: white; color: #2d3748; padding: 30px; border-radius: 12px; width: 450px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
+        .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 350px; overflow-y: auto; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: left; }
+        .role-item { padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.2s; }
         .role-item:hover:not(.taken) { background: #ebf8ff; border-color: #3182ce; }
-        .role-item.taken { background: #fff5f5; color: #c53030; border-color: #feb2b2; cursor: not-allowed; opacity: 0.7; }
+        .role-item.taken { background: #fff5f5; color: #c53030; border-color: #feb2b2; opacity: 0.7; cursor: not-allowed; }
         .role-item.selected { background: #3182ce; color: white; border-color: #2b6cb0; }
+        .role-item small { display: block; font-weight: normal; font-size: 11px; margin-top: 4px; }
 
         /* APP E SIDEBAR */
         #app-container { display: none; width: 100%; height: 100%; }
-        .sidebar { width: 260px; background-color: var(--primary-color); color: white; display: flex; flex-direction: column; }
+        .sidebar { width: 250px; background-color: var(--primary-color); color: white; display: flex; flex-direction: column; z-index: 10; }
         .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid #2d3748; }
-        #infoPostoAtivo { display: block; background: #d69e2e; color: white; padding: 5px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-top: 10px; text-transform: uppercase; }
-        
-        .menu-items { flex-grow: 1; padding: 20px 0; }
-        .menu-btn { background: none; border: none; color: #a0aec0; padding: 15px 20px; text-align: left; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; }
-        .menu-btn.active { background-color: #2d3748; color: white; border-left: 5px solid #ecc94b; }
+        .sidebar-header h2 { margin: 0; font-size: 20px; color: #63b3ed; }
+        #infoFuncaoAtiva { display: inline-block; background: #d69e2e; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-top: 10px; text-transform: uppercase; }
+        #tagAdmin { display: none; background: #3182ce; color: #fff; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; margin-top: 5px; }
+
+        .menu-items { flex-grow: 1; padding: 20px 0; display: flex; flex-direction: column; overflow-y: auto; }
+        .menu-btn { background: none; border: none; color: #a0aec0; padding: 15px 20px; text-align: left; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .menu-btn:hover { background-color: #2d3748; color: white; }
+        .menu-btn.active { background-color: #d69e2e; color: white; border-left: 5px solid #ecc94b; }
 
         .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; background: var(--bg-color); }
         .screen { display: none; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); min-height: 85vh; }
         .screen.active { display: block; }
 
+        /* TABELAS E FORMULÁRIOS */
+        h2 { margin-top: 0; color: var(--text-color); border-bottom: 2px solid #edf2f7; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;}
         table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
         th, td { border: 1px solid #e2e8f0; padding: 12px; text-align: left; }
-        th { background: #2d3748; color: white; }
+        th { background: #2d3748; color: white; position: sticky; top: -25px; z-index: 5; }
+        .mono-font { font-family: 'Courier New', Courier, monospace; font-weight: bold; }
         .btn { padding: 10px 15px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; color: white; }
-        .btn-save { background: #48bb78; }
-        .btn-logout { background: #e53e3e; margin-top: auto; padding: 15px; border-radius: 0;}
+        .btn-save { background-color: #48bb78; }
+        .btn-logout { background-color: #e53e3e; width: 100%; padding: 15px; margin-top: auto; border-radius: 0;}
+        
+        .badge-siopm { padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .badge-aberto { background: #fee2e2; color: #b91c1c; }
+        .badge-encerrado { background: #f0fdf4; color: #166534; }
+
+        .only-admin { display: none; }
+        body.is-admin .only-admin { display: block !important; }
+        body.is-admin .sidebar { background: linear-gradient(180deg, #4a1414 0%, #1a202c 100%); }
+
+        @media print { .no-print, .sidebar { display: none !important; } .main-content { padding: 0; } }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div class="login-box">
-            <h2 style="color:#2b6cb0; margin-top:0;">COPOM Supervisores</h2>
-            <p style="font-size:12px; color:#718096; margin-bottom:20px;">Acesso à Mesa de Operações</p>
+            <h1 style="color:#2b6cb0; margin:0 0 5px 0; font-size:24px;">COPOM Supervisores</h1>
+            <p style="color:#718096; font-size:12px; margin-bottom:25px;">Mesa de Operações Digital</p>
             <input type="email" id="loginEmail" placeholder="E-mail">
             <input type="password" id="loginSenha" placeholder="Senha">
-            <button onclick="fazerLogin()" style="width:100%;">Acessar Sistema</button>
-            <div style="margin: 15px 0; color: #a0aec0; font-size: 10px;">OU</div>
+            <button onclick="fazerLogin()" style="width:100%; margin-bottom:10px;">Acessar</button>
             <button onclick="fazerLoginGoogle()" style="background:#4285F4; width:100%;">Entrar com o Google</button>
-            <p id="msgErroLogin" style="color:#e53e3e; font-size:11px; display:none; margin-top:10px;">Falha na autenticação.</p>
+            <p id="msgErroLogin" style="color:#e53e3e; font-size:11px; display:none; margin-top:10px;">Credenciais inválidas.</p>
         </div>
     </div>
 
     <div id="role-selection-screen">
         <div class="role-box">
-            <h2 style="margin-top:0; border:none; justify-content:center;">Assumir Turno</h2>
-            <p style="font-size:13px; color:#718096;">Selecione o seu Posto para filtragem de dados:</p>
-            
-            <div class="role-grid" id="gridPostos">
-                </div>
-
-            <div style="margin-top:20px; display:flex; gap:10px;">
-                <button class="btn btn-save" style="flex:1; padding:15px;" onclick="confirmarPosto()">✅ Confirmar Entrada</button>
+            <h2 style="border:none; justify-content:center;">Assumir Posto de Serviço</h2>
+            <p style="font-size:13px; color:#718096;">Selecione a sua função para filtragem de dados:</p>
+            <div id="gridPostos" class="role-grid"></div>
+            <div style="margin-top:25px; display:flex; gap:10px;">
+                <button class="btn btn-save" style="flex:1; padding:15px; font-size:16px;" onclick="confirmarPosto()">✅ Assumir Turno</button>
                 <button class="btn" style="background:#718096;" onclick="fazerLogout()">Sair</button>
             </div>
         </div>
@@ -83,34 +98,59 @@
         <div class="sidebar">
             <div class="sidebar-header">
                 <h2>COPOM</h2>
-                <span id="infoPostoAtivo">POSTO ATIVO</span>
+                <div id="tagAdmin">👑 ADMINISTRADOR</div>
+                <div id="infoFuncaoAtiva">POSTO ATIVO</div>
             </div>
             <div class="menu-items">
                 <button class="menu-btn active" onclick="abrirTela('tela-siopm', this)">📻 SIOPM Inoperante</button>
-                <button class="menu-btn" onclick="abrirTela('tela-ocorrencias', this)">🚨 Ocorrências</button>
                 <button class="menu-btn" onclick="abrirTela('tela-mapa', this)">👮 Mapa de Força</button>
+                <button class="menu-btn" onclick="abrirTela('tela-ocorrencias', this)">🚨 Ocorrências</button>
+                <button class="menu-btn" onclick="abrirTela('tela-guinchos', this)">🚛 Guinchos</button>
+                <button class="menu-btn" onclick="abrirTela('tela-efetivo', this)">📘 Base de Contatos</button>
+                <button class="menu-btn only-admin" style="color:#d69e2e" onclick="abrirTela('tela-usuarios', this)">🛡️ Gestão de Perfis</button>
             </div>
-            <button class="btn btn-logout" onclick="solicitarTrocaTurno()">🚪 Encerrar Turno</button>
+            <button class="btn btn-logout" onclick="solicitarTrocaTurno()">🚪 Encerrar Turno / Sair</button>
         </div>
 
         <div class="main-content">
+            
             <div id="tela-siopm" class="screen active">
-                <h2>📻 Registro de SIOPM (Filtrado por Posto)</h2>
+                <h2><span>📻 Talões Inoperantes</span></h2>
+                <div class="no-print" style="background:#f8fafc; padding:20px; border-radius:8px; border:1px solid #e2e8f0; margin-bottom:20px;">
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:15px; align-items:end;">
+                        <div><label style="font-size:11px; font-weight:bold;">BPM</label><select id="sBpm"></select></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Talão</label><input type="text" id="sTalao" class="mono-font"></div>
+                        <div><label style="font-size:11px; font-weight:bold;">Período</label><select id="sPeriodo"><option>Dia</option><option>Noite</option></select></div>
+                        <button class="btn btn-save" onclick="salvarSiopm()">➕ Registrar</button>
+                    </div>
+                </div>
                 <table>
-                    <thead><tr><th>Data</th><th>BPM</th><th>Talão</th><th>Período</th><th>Desfecho</th><th>Status</th></tr></thead>
+                    <thead><tr><th>Data</th><th>BPM</th><th>Talão</th><th>Período</th><th>Desfecho</th><th>Status</th><th>Ações</th></tr></thead>
                     <tbody id="tabelaSiopm"></tbody>
                 </table>
             </div>
 
-            <div id="tela-ocorrencias" class="screen">
-                <h2>🚨 Ocorrências do Posto</h2>
-                <tbody id="tabelaOcorrencias"></tbody>
+            <div id="tela-usuarios" class="screen only-admin">
+                <h2>🛡️ Gestão de Acessos</h2>
+                <div style="background:#fff3cd; padding:20px; border-radius:8px; border:1px solid #ffeeba; margin-bottom:25px;">
+                    <h3 style="margin:0 0 15px 0; font-size:15px;">➕ Pré-Autorizar Militar</h3>
+                    <div style="display:flex; gap:10px;">
+                        <input type="email" id="admNewEmail" placeholder="E-mail do Militar (@gmail.com)" style="flex:1; padding:10px;">
+                        <select id="admNewCargo" style="width:150px;"><option value="operador">Operador</option><option value="leitura">Leitura</option></select>
+                        <button class="btn btn-save" onclick="preAprovarMilitar()">✅ Autorizar</button>
+                    </div>
+                </div>
+                <table id="tabelaUsuarios">
+                    <thead><tr><th>Identificação</th><th>Estado</th><th>Cargo</th><th>Ações</th></tr></thead>
+                    <tbody></tbody>
+                </table>
             </div>
 
-            <div id="tela-mapa" class="screen">
-                <h2>👮 Mapa de Força Regional</h2>
-                <div id="containerBatalhoes"></div>
-            </div>
+            <div id="tela-mapa" class="screen"><h2>👮 Mapa de Força</h2><div id="containerBatalhoes"></div></div>
+            <div id="tela-ocorrencias" class="screen"><h2>🚨 Ocorrências</h2><tbody id="tabelaOcorrencias"></tbody></div>
+            <div id="tela-guinchos" class="screen"><h2>🚛 Guinchos</h2><tbody id="tabelaGuinchos"></tbody></div>
+            <div id="tela-efetivo" class="screen"><h2>📘 Contatos</h2><tbody id="tabelaEfetivo"></tbody></div>
+
         </div>
     </div>
 
@@ -123,7 +163,7 @@
             apiKey: "AIzaSyA8x03EfniEJuUiPgy2OsKU5z-5t-MgpGc",
             authDomain: "controlefuncional-9ea1f.web.app",
             projectId: "controlefuncional-9ea1f",
-            storageBucket: "controlefuncional-9ea1f.firebasestorage.app",
+            storageBucket: "controlefuncional-9ea1f.appspot.com",
             messagingSenderId: "542560536368",
             appId: "1:542560536368:web:dee033089e03339148aaf5"
         };
@@ -133,12 +173,18 @@
         const dbFS = getFirestore(app);
 
         let userMail = "";
+        let isAdmin = false;
         let postoAtivo = "";
-        let postosOcupados = {};
-
+        let postoAtivoTemp = "";
         const LISTA_POSTOS = ["Supervisor 190", "Supervisor Choque", ...Array.from({length: 12}, (_, i) => `Supervisor CPAM-${i+1}`)];
 
-        // AUTH COM REDIRECIONAMENTO (Para evitar o erro de Popup em branco)
+        // INICIALIZAÇÃO DE BPMs
+        window.onload = () => {
+            const sBpm = document.getElementById('sBpm');
+            for(let i=1; i<=50; i++) sBpm.innerHTML += `<option value="${i}º BPM">${i}º BPM</option>`;
+        };
+
+        // AUTENTICAÇÃO
         window.fazerLogin = async () => { try { await signInWithEmailAndPassword(auth, loginEmail.value, loginSenha.value); } catch(e) { msgErroLogin.style.display='block'; } };
         window.fazerLoginGoogle = async () => { await signInWithRedirect(auth, new GoogleAuthProvider()); };
         window.fazerLogout = async () => { if(postoAtivo) await deleteDoc(doc(dbFS, "mesa_operacoes", postoAtivo)); await signOut(auth); location.reload(); };
@@ -146,6 +192,12 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 userMail = user.email;
+                isAdmin = (user.email === "lucaszulu@gmail.com");
+                
+                const pDoc = await getDoc(doc(dbFS, "perfis", user.email));
+                if (!pDoc.exists() && !isAdmin) { alert("Acesso Pendente."); await signOut(auth); return; }
+                
+                if(isAdmin) document.body.classList.add('is-admin');
                 login_screen.style.display = 'none';
                 iniciarMonitoramentoMesa();
             } else {
@@ -155,66 +207,116 @@
             }
         });
 
-        // MESA DE OPERAÇÕES (LÓGICA DE FILTRAGEM DO PLANO B)
+        // MONITORAMENTO DE MESA (PLANO B)
         function iniciarMonitoramentoMesa() {
             onSnapshot(collection(dbFS, "mesa_operacoes"), (snap) => {
-                postosOcupados = {};
-                snap.docs.forEach(d => postosOcupados[d.id] = d.data().user);
-                desenharPostos();
+                const ocupados = {}; snap.docs.forEach(d => ocupados[d.id] = d.data().user);
+                desenharPostos(ocupados);
                 if(!postoAtivo) role_selection_screen.style.display = 'flex';
             });
         }
 
-        function desenharPostos() {
-            const grid = gridPostos; grid.innerHTML = "";
+        function desenharPostos(ocupados) {
+            gridPostos.innerHTML = "";
             LISTA_POSTOS.forEach(p => {
-                const ocupante = postosOcupados[p];
-                const estaOutro = ocupante && ocupante !== userMail;
-                const estaEu = ocupante === userMail;
-
+                const dono = ocupados[p];
+                const estaOutro = dono && dono !== userMail;
+                const estaEu = dono === userMail;
                 let css = "role-item";
-                if(estaEu) css += " selected";
+                if(postoAtivoTemp === p) css += " selected";
                 if(estaOutro) css += " taken";
-
-                grid.innerHTML += `
-                    <div class="${css}" onclick="selecionarPosto('${p}', ${estaOutro})">
-                        <span>${p}</span>
-                        <small>${estaOutro ? '🚫 Ocupado' : '🟢 Disponível'}</small>
-                    </div>
-                `;
+                gridPostos.innerHTML += `<div class="${css}" onclick="selecionarPosto('${p}', ${estaOutro})"><span>${p}</span><small>${estaOutro?'🚫 '+dono:'🟢 Livre'}</small></div>`;
             });
         }
 
         window.selecionarPosto = (p, taken) => {
-            if(taken) return alert("Este posto já está sendo operado por outro supervisor!");
-            postoAtivo = p;
-            desenharPostos();
+            if(taken && !isAdmin) return alert("Posto Ocupado!");
+            if(taken && isAdmin && confirm("Deseja forçar a liberação deste posto?")) { deleteDoc(doc(dbFS, "mesa_operacoes", p)); return; }
+            postoAtivoTemp = p; desenharPostos({}); 
         };
 
         window.confirmarPosto = async () => {
-            if(!postoAtivo) return alert("Selecione um posto de serviço!");
+            if(!postoAtivoTemp) return alert("Selecione um Posto!");
+            postoAtivo = postoAtivoTemp;
             await setDoc(doc(dbFS, "mesa_operacoes", postoAtivo), { user: userMail, ts: Date.now() });
             role_selection_screen.style.display = 'none';
             app_container.style.display = 'flex';
-            infoPostoAtivo.innerText = postoAtivo;
-            carregarDadosOperacionais();
+            infoFuncaoAtiva.innerText = postoAtivo;
+            iniciarSincronizacaoDados();
         };
 
-        function carregarDadosOperacionais() {
+        window.solicitarTrocaTurno = () => { if(confirm("Encerrar Turno?")) fazerLogout(); };
+
+        // OPERAÇÃO SIOPM (GRAVAÇÃO POR POSTO)
+        window.salvarSiopm = async () => {
+            const id = "sio_" + Date.now();
+            await setDoc(doc(dbFS, "siopm", id), {
+                id, data: new Date().toLocaleDateString('pt-BR'), bpm: sBpm.value, 
+                talao: sTalao.value, periodo: sPeriodo.value, status: 'Aberto', 
+                desfecho: '', criadoPor: postoAtivo // ATRIBUIÇÃO AO POSTO
+            });
+            sTalao.value = "";
+        };
+
+        window.encerrarSiopm = async (id, bpm) => {
+            let i = (await getDoc(doc(dbFS, "siopm", id))).data();
+            if(i.criadoPor !== postoAtivo && !isAdmin) return alert("Apenas o responsável pelo Posto pode encerrar.");
+            
+            let op = prompt("1-Novo Talão / 2-Redirecionado");
+            let final = "";
+            if(op==="1") final = "T. SIOPM: "+prompt("Nº:")+" do "+bpm;
+            else if(op==="2") final = "Redirecionado p/ "+prompt("Destino:");
+            else return;
+            
+            await updateDoc(doc(dbFS, "siopm", id), { status: 'Encerrado', desfecho: final });
+        };
+
+        // SINCRONIZAÇÃO HÍBRIDA (FILTRA POSTO + E-MAIL ANTIGO)
+        function iniciarSincronizacaoDados() {
             const dataH = new Date().toLocaleDateString('pt-BR');
-            // FILTRAGEM HÍBRIDA: Mostra o que for do Posto OU o que for do E-mail (Retrocompatibilidade)
             onSnapshot(collection(dbFS, "siopm"), (snap) => {
                 tabelaSiopm.innerHTML = "";
                 snap.docs.forEach(doc => {
                     const d = doc.data();
-                    if((d.criadoPor === postoAtivo || d.criadoPor === userMail) && (d.data === dataH || d.status === 'Aberto')) {
-                        // Renderiza a linha na tabela...
+                    const ehMeuPosto = (d.criadoPor === postoAtivo);
+                    const ehMeuLegado = (d.criadoPor === userMail);
+                    const estaAberto = (d.status === 'Aberto');
+
+                    if((ehMeuPosto || ehMeuLegado || estaAberto) && (d.data === dataH || estaAberto)) {
+                        tabelaSiopm.innerHTML += `
+                            <tr>
+                                <td class="mono-font">${d.data}</td>
+                                <td><strong>${d.bpm}</strong></td>
+                                <td class="mono-font">${d.talao}</td>
+                                <td>${d.periodo}</td>
+                                <td style="color:#2b6cb0; font-weight:bold;">${d.desfecho}</td>
+                                <td><span class="badge-siopm ${d.status==='Aberto'?'badge-aberto':'badge-encerrado'}">${d.status}</span></td>
+                                <td>${d.status==='Aberto' ? `<button onclick="encerrarSiopm('${d.id}', '${d.bpm}')">Encerrar</button>` : '🔒'}</td>
+                            </tr>
+                        `;
                     }
                 });
             });
+
+            // GESTÃO DE PERFIS (ADMIN)
+            if(isAdmin) {
+                onSnapshot(collection(dbFS, "perfis"), (snap) => {
+                    const tb = tabelaUsuarios.querySelector('tbody'); tb.innerHTML = "";
+                    snap.docs.forEach(doc => {
+                        const u = doc.data();
+                        tb.innerHTML += `<tr><td>${doc.id}</td><td>${u.status}</td><td>${u.role}</td><td><button onclick="deleteDoc(doc(dbFS, 'perfis', '${doc.id}'))">Excluir</button></td></tr>`;
+                    });
+                });
+            }
         }
 
-        window.solicitarTrocaTurno = () => { if(confirm("Encerrar turno e liberar posto?")) window.fazerLogout(); };
+        window.preAprovarMilitar = async () => {
+            const email = admNewEmail.value;
+            const cargo = admNewCargo.value;
+            if(!email) return;
+            await setDoc(doc(dbFS, "perfis", email), { status: 'aprovado', role: cargo });
+            alert("Autorizado!"); admNewEmail.value = "";
+        };
 
         window.abrirTela = (id, btn) => {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
