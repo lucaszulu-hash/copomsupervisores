@@ -50,6 +50,7 @@
         .btn-backup { background-color: #38a169; }
         .btn-logout { background-color: #e53e3e; margin-bottom: 0;}
 
+        /* ESTILOS DE ADMIN */
         body.role-admin .sidebar { background: linear-gradient(180deg, #4a1414 0%, #220505 100%); }
         body.role-admin .sidebar-header { border-bottom: 1px solid #7b2c2c; }
         body.role-admin .sidebar-footer { border-top: 1px solid #7b2c2c; }
@@ -243,6 +244,8 @@
                     <div class="card" style="border-left: 4px solid #d69e2e;"><div class="card-icon">🚛</div><div class="card-info"><h3 id="dashGuinchos">0</h3><p>Seus Guinchos (Hoje/Ontem)</p></div></div>
                 </div>
 
+                <div id="painelMesaAdmin" class="only-admin" style="margin-top: 30px; margin-bottom: 30px;"></div>
+
                 <div id="box-relatorio-dashboard" style="text-align: center; background: #fff; padding: 30px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.05);" class="no-print">
                     <h3 style="margin-top: 0; color: #2d3748; font-size: 22px;">Resumo Diário de Serviço (Dossiê)</h3>
                     <p style="color: #718096; font-size: 14px; margin-bottom: 20px;">Gera o relatório com o Mapa de Força, Guinchos, SIOPM e Ocorrências.<br>
@@ -332,7 +335,7 @@
                         <input type="date" id="dataMapa" onchange="carregarMapaDoDia()" style="width:auto; padding: 7px; font-weight: bold; background: #fff; border: 1px solid #cbd5e1; border-radius: 5px; color: #2d3748;" class="mono-font">
                         
                         <select id="filtroAdminUsuarioMapa" class="only-admin" style="padding: 7px; background: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: 5px; font-weight: bold; font-size: 12px; margin-left: 10px;" onchange="carregarMapaDoDia()">
-                            <option value="todos">👑 Admin: Todos os Perfis</option>
+                            <option value="todos">👑 Admin: Todos os Postos</option>
                         </select>
 
                         <button class="btn btn-print" style="margin-left: 10px;" onclick="imprimirTela('mapa')">🖨️ Imprimir PDF</button>
@@ -498,7 +501,7 @@
         const TEMPO_INATIVIDADE = 15 * 60 * 1000;
         const EMAIL_DO_ADMINISTRADOR = "lucaszulu@gmail.com"; 
         
-        // NOVO POSTO "CHEFIA" ADICIONADO AQUI
+        // CHEFIA ADICIONADA
         const LISTA_POSTOS = ["Chefia", "Supervisor 190", "Supervisor Choque", ...Array.from({length: 12}, (_, i) => `Supervisor CPAM-${i+1}`)];
 
         window.eH = function(str) {
@@ -519,14 +522,9 @@
 
         window.fazerLogin = async function() { try { await signInWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginSenha').value); } catch(e) { document.getElementById('msgErroLogin').style.display = 'block'; } };
         
-        // LOGIN POPUP
         window.fazerLoginGoogle = async function() { 
-            try {
-                await signInWithPopup(auth, new GoogleAuthProvider()); 
-            } catch (error) {
-                console.error("Falha no popup do Google:", error);
-                alert("Erro ao comunicar com a Google. Tente novamente.");
-            }
+            try { await signInWithPopup(auth, new GoogleAuthProvider()); } 
+            catch (error) { console.error("Falha no popup do Google:", error); alert("Erro ao comunicar com a Google."); }
         };
         
         window.fazerLogout = async function() { 
@@ -553,16 +551,13 @@
                     const isMaster = (user.email === EMAIL_DO_ADMINISTRADOR);
                     
                     if (!docSnap.exists() && !isMaster) {
-                        alert("⚠️ Acesso Negado: O e-mail [" + user.email + "] não está autorizado no Quartel General. Solicite liberação ao Comandante.");
+                        alert("⚠️ Acesso Negado: O e-mail [" + user.email + "] não está autorizado.");
                         await signOut(auth); 
                         return;
                     }
 
                     const dadosPerfil = docSnap.exists() ? docSnap.data() : { role: 'admin', status: 'aprovado' };
-                    
-                    if(dadosPerfil.status === 'bloqueado') {
-                        alert("Acesso revogado."); await signOut(auth); return;
-                    }
+                    if(dadosPerfil.status === 'bloqueado') { alert("Acesso revogado."); await signOut(auth); return; }
                     
                     window.userStatus = dadosPerfil.status;
                     window.userRole = isMaster ? 'master' : dadosPerfil.role;
@@ -585,26 +580,19 @@
                     }
                     
                     if(window.userStatus === 'pendente') {
-                        document.body.classList.add('status-pendente');
-                        document.getElementById('banner-pendente').style.display = 'block';
+                        document.body.classList.add('status-pendente'); document.getElementById('banner-pendente').style.display = 'block';
                     } else {
-                        document.body.classList.remove('status-pendente');
-                        document.getElementById('banner-pendente').style.display = 'none';
+                        document.body.classList.remove('status-pendente'); document.getElementById('banner-pendente').style.display = 'none';
                     }
 
                     document.getElementById('login-screen').style.display = 'none';
                     window.iniciarMonitoramentoPostos();
                     
                 } catch (erroDeLeitura) {
-                    console.error("Erro na leitura de hierarquia:", erroDeLeitura);
-                    alert("⚠️ Falha de comunicação com o servidor de segurança. Tente logar novamente.");
-                    await signOut(auth);
+                    console.error("Erro na leitura de hierarquia:", erroDeLeitura); alert("⚠️ Falha de comunicação com o servidor."); await signOut(auth);
                 }
             } else {
-                document.getElementById('login-screen').style.display = 'flex'; 
-                document.getElementById('app-container').style.display = 'none'; 
-                document.getElementById('role-selection-screen').style.display = 'none'; 
-                clearTimeout(inatividadeTimer);
+                document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-container').style.display = 'none'; document.getElementById('role-selection-screen').style.display = 'none'; clearTimeout(inatividadeTimer);
             }
         });
 
@@ -613,6 +601,7 @@
                 window.postosOcupados = {};
                 snap.docs.forEach(d => window.postosOcupados[d.id] = d.data().user);
                 window.desenharPostos();
+                window.atualizarPainelMesaAdmin(); // ATUALIZA O PAINEL DE DERRUBAR
                 if(!window.postoAtivo) document.getElementById('role-selection-screen').style.display = 'flex';
             });
         }
@@ -620,36 +609,24 @@
         window.desenharPostos = function() {
             const grid = document.getElementById('gridPostos'); grid.innerHTML = "";
             LISTA_POSTOS.forEach(p => {
-                // RESTRIÇÃO VISUAL DA CHEFIA
-                if (p === "Chefia" && !window.temAcessoTotal()) return;
-
+                if (p === "Chefia" && !window.temAcessoTotal()) return; // Esconde chefia de operadores comuns
+                
                 const ocupante = window.postosOcupados[p];
                 const estaEu = ocupante === window.currentUserEmail;
                 const estaOutro = ocupante && !estaEu;
-                
                 let css = "role-item";
                 if(window.postoAtivoTemp === p) css += " selected";
                 if(estaOutro) css += " taken";
                 
-                // BOTÃO DE DERRUBAR (Acesso Total)
-                let btnDerrubar = "";
-                if (estaOutro && window.temAcessoTotal()) {
-                    btnDerrubar = `<br><span style="color:#e53e3e; font-size:10px; font-weight:bold; background:#fff5f5; padding:2px 4px; border-radius:4px; display:inline-block; margin-top:5px; border:1px solid #feb2b2;">🛑 Clique para Derrubar</span>`;
-                }
-
-                grid.innerHTML += `<div class="${css}" onclick="selecionarPosto('${p}', ${estaOutro})"><span>${p}</span><small>${estaOutro ? '🚫 Ocupado por:<br>'+ocupante + btnDerrubar : '🟢 Vaga Livre'}</small></div>`;
+                grid.innerHTML += `<div class="${css}" onclick="selecionarPosto('${p}', ${estaOutro})"><span>${p}</span><small>${estaOutro ? '🚫 Ocupado por:<br>'+ocupante : '🟢 Vaga Livre'}</small></div>`;
             });
         }
 
         window.selecionarPosto = async function(p, taken) {
             if(taken) {
                 if(window.temAcessoTotal()) {
-                    if(confirm(`A vaga de ${p} está ocupada por [${window.postosOcupados[p]}]. Confirma a desconexão forçada deste operador?`)) { 
-                        await deleteDoc(doc(dbFS, "mesa_operacoes", p)); 
-                    }
-                } else { 
-                    alert("🚫 Acesso Negado: Posto já operado por: " + window.postosOcupados[p]); 
-                }
+                    if(confirm(`Vaga de ${p} ocupada por [${window.postosOcupados[p]}]. Forçar liberação?`)) { await deleteDoc(doc(dbFS, "mesa_operacoes", p)); }
+                } else { alert("🚫 Acesso Negado: Posto já operado por: " + window.postosOcupados[p]); }
                 return;
             }
             window.postoAtivoTemp = p; window.desenharPostos();
@@ -663,6 +640,36 @@
             document.getElementById('infoFuncaoAtiva').innerText = window.postoAtivo;
             window.registrarAuditoria('Assumiu Turno', `Mesa: ${window.postoAtivo}`);
             resetarTimer(); iniciarSincronizacaoFirebase(); setTimeout(() => window.setOnlineStatus(true), 2000);
+        }
+
+        // NOVO: PAINEL PARA DERRUBAR POSTOS (APENAS ADMIN)
+        window.atualizarPainelMesaAdmin = function() {
+            const painel = document.getElementById('painelMesaAdmin');
+            if(!painel || !window.temAcessoTotal()) return;
+            
+            let html = `<h3 class="secao-titulo" style="color:#e53e3e; border-bottom-color:#feb2b2;">🛑 Postos Ativos (Clique para Derrubar)</h3><div class="grid-supervisao">`;
+            let cont = 0;
+            Object.keys(window.postosOcupados).forEach(p => {
+                cont++;
+                const userEmail = window.postosOcupados[p];
+                html += `<div class="card-sup" style="background:#fff5f5; border:1px solid #feb2b2; border-left:4px solid #e53e3e; color:#2d3748; cursor:pointer;" onclick="derrubarPostoGeral('${p}')">
+                            <div>
+                                <span style="font-size:10px; font-weight:900; color:#e53e3e; display:block;">${p}</span>
+                                <span style="font-size:13px; font-weight:bold;">${userEmail}</span>
+                            </div>
+                            <div style="font-size:11px; font-weight:bold; color:#c53030;">❌ DERRUBAR</div>
+                         </div>`;
+            });
+            if(cont === 0) html += `<p style="font-size:13px; color:#718096; margin-left:5px;">Nenhum posto ocupado no momento.</p>`;
+            html += `</div>`;
+            painel.innerHTML = html;
+        }
+
+        window.derrubarPostoGeral = async function(posto) {
+            if(confirm(`Tem a certeza que deseja DERRUBAR o operador da mesa de ${posto}?`)) {
+                await deleteDoc(doc(dbFS, "mesa_operacoes", posto));
+                window.registrarAuditoria('Derrubou Operador', `Forçou saída da mesa: ${posto}`);
+            }
         }
 
         function iniciarSincronizacaoFirebase() {
@@ -797,12 +804,15 @@
             document.getElementById('dashGuinchos').innerText = guinchosDash.filter(g => g.dataShow && vs.includes(g.dataShow.split(' ')[0])).length;
         }
 
+        // NOVO: FILTRO POR CPA EM VEZ DE E-MAIL
         window.atualizarFiltroAdminMapa = function() {
             if(window.temAcessoTotal()) {
                 const sel = document.getElementById('filtroAdminUsuarioMapa');
                 sel.style.display = 'inline-block'; const atual = sel.value;
-                let html = `<option value="todos">👑 Admin: Todos</option>`;
-                if(window.sgidb.perfis) { Object.keys(window.sgidb.perfis).forEach(email => html += `<option value="${window.eH(email)}">👤 ${window.eH(email)}</option>`); }
+                let html = `<option value="todos">👑 Admin: Todos os Postos</option>`;
+                LISTA_POSTOS.forEach(posto => {
+                    html += `<option value="${posto}">📍 ${posto}</option>`;
+                });
                 sel.innerHTML = html; sel.value = atual || 'todos';
             }
         }
@@ -897,7 +907,11 @@
             let dia = window.getDB().mapaForca.filter(r => r.data === dt);
             
             if (!window.temAcessoTotal()) dia = dia.filter(r => r.criadoPor === window.postoAtivo || r.criadoPor === window.currentUserEmail);
-            else { const selUser = document.getElementById('filtroAdminUsuarioMapa').value; if(selUser !== 'todos') dia = dia.filter(r => r.criadoPor === selUser); }
+            else { 
+                const selUser = document.getElementById('filtroAdminUsuarioMapa').value; 
+                // FILTRAGEM AGORA OCORRE PELO POSTO DE SERVIÇO EM VEZ DE EMAIL
+                if(selUser !== 'todos') dia = dia.filter(r => r.criadoPor === selUser); 
+            }
 
             let sup = dia.filter(r => r.funcao.includes("SUP") || r.funcao === "PPJMD"); let op = dia.filter(r => r.funcao === "CFP" || r.funcao === "CGP");
             if(sup.length > 0) { 
@@ -1123,7 +1137,7 @@
             log.forEach(l => { tb.innerHTML += `<tr><td class="mono-font">${window.eH(l.data)}</td><td><strong>${window.eH(l.user)}</strong></td><td>${window.eH(l.acao)}</td><td>${window.eH(l.detalhe)}</td></tr>`; });
         }
 
-        // NOVO BACKUP GERAL (PROFUNDO)
+        // BACKUP GERAL (PROFUNDO - IGNORANDO GUINCHOS E MOTORISTAS)
         window.gerarBackupGeral = async function() {
             if(!window.temAcessoTotal()) return alert("Apenas Administradores podem gerar backups.");
             
@@ -1133,11 +1147,10 @@
 
             try {
                 let backupData = {};
-                // Ignorando Guinchos e Motoristas conforme solicitado, focando no núcleo do sistema.
                 const colecoes = ['efetivo', 'mapaForca', 'ocorrencias', 'siopm', 'perfis', 'auditoria']; 
                 
                 for(let col of colecoes) {
-                    const snap = await getDocs(collection(dbFS, col)); // Puxa TODO O HISTÓRICO da coleção
+                    const snap = await getDocs(collection(dbFS, col)); 
                     backupData[col] = snap.docs.map(d => d.data());
                 }
 
@@ -1149,10 +1162,10 @@
                 a.click(); 
                 document.body.removeChild(a); 
                 
-                window.registrarAuditoria('Backup Geral', 'Baixou o histórico completo (Ocorrências, Mapa, Efetivo, Perfis e Auditoria).');
+                window.registrarAuditoria('Backup Geral', 'Baixou o histórico completo.');
             } catch (e) {
                 console.error(e);
-                alert("Erro ao comunicar com o servidor de arquivo. Tente novamente.");
+                alert("Erro ao comunicar com o servidor. Tente novamente.");
             } finally {
                 btn.innerText = "💾 Baixar Backup Único";
                 btn.disabled = false;
