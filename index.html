@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>COPOM Supervisores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #1a202c; --secondary-color: #2b6cb0; 
-            --bg-color: #f0f2f5; --text-color: #2d3748;
+            --bg-color: #e2e8f0; /* Fundo mais escuro para reduzir fadiga visual (contraste com cards brancos) */
+            --text-color: #2d3748;
             --cfp-bg: #fee2e2; --cfp-text: #b91c1c;
             --cgp-bg: #f0fdf4; --cgp-text: #166534;
             --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
@@ -20,7 +22,7 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); display: flex; height: 100vh; overflow: hidden; color: var(--text-color); }
+        body { margin: 0; font-family: 'Inter', Tahoma, sans-serif; background-color: var(--bg-color); display: flex; height: 100vh; overflow: hidden; color: var(--text-color); }
 
         /* ESTILOS DA PMESP E COPOM (LOGOS E MARCA D'ÁGUA) */
         .logos-login-container { display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 20px; }
@@ -30,21 +32,15 @@
         .logo-copom-sidebar { width: 65px; margin-bottom: 10px; background: white; border-radius: 50%; padding: 3px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .logo-pmesp-print { width: 60px; height: auto; }
         
-        .watermark-bg {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 500px; opacity: 0.03; pointer-events: none; z-index: 0;
-            filter: grayscale(100%);
-        }
-
         /* TELA DE LOGIN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; transition: 0.3s opacity; }
-        .login-box { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); text-align: center; width: 340px; color: #2d3748; z-index: 10000; }
+        .login-box { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); text-align: center; width: 340px; color: #2d3748; z-index: 10000; }
         
-        /* MELHORIA NOS INPUTS (FOCO SUAVE) */
+        /* MELHORIA NOS INPUTS (FOCO SUAVE, BORDAS MAIS ARREDONDADAS) */
         input, select, textarea { 
-            width: 100%; padding: 12px; margin-bottom: 15px; 
-            border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; 
-            font-family: inherit; font-size: 13px; color: #2d3748; background: #fff;
+            width: 100%; padding: 14px; margin-bottom: 15px; 
+            border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; 
+            font-family: inherit; font-size: 14px; color: #2d3748; background: #fff;
             transition: all 0.3s ease; 
         }
         input:focus, select:focus, textarea:focus {
@@ -54,36 +50,36 @@
         }
 
         .login-box input { margin-bottom: 15px; }
-        .login-box button { width: 100%; padding: 12px; background-color: #2b6cb0; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; transition: all 0.2s ease; }
+        .login-box button { width: 100%; padding: 14px; background-color: #2b6cb0; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 16px; transition: all 0.2s ease; }
         .login-box button:hover { background-color: #1a365d; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.2);}
         .login-box button:active { transform: translateY(1px); }
 
         /* MESA DE OPERAÇÕES */
         #role-selection-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26, 32, 44, 0.95); z-index: 9998; justify-content: center; align-items: center; color: white; flex-direction: column; backdrop-filter: blur(5px); }
-        .role-box { background: white; color: #2d3748; padding: 30px; border-radius: 12px; width: 500px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-        .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 400px; overflow-y: auto; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: left; background: #f8fafc;}
-        .role-item { padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; transition: all 0.2s ease; background: #fff;}
+        .role-box { background: white; color: #2d3748; padding: 40px; border-radius: 16px; width: 500px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-height: 400px; overflow-y: auto; padding: 15px; border: 1px solid #e2e8f0; border-radius: 12px; text-align: left; background: #f8fafc;}
+        .role-item { padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s ease; background: #fff;}
         .role-item:hover:not(.taken) { background: #ebf8ff; border-color: #3182ce; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.05);}
         .role-item.taken { background: #fff5f5; color: #c53030; border-color: #feb2b2; opacity: 0.8; }
         .role-item.selected { background: #3182ce; color: white; border-color: #2b6cb0; transform: scale(1.02); box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);}
-        .role-item small { display: block; font-weight: normal; font-size: 11px; margin-top: 4px; line-height: 1.3;}
+        .role-item small { display: block; font-weight: 400; font-size: 11px; margin-top: 4px; line-height: 1.3;}
 
         /* MENU LATERAL */
         #app-container { display: none; width: 100%; height: 100%; }
-        .sidebar { width: 250px; background-color: var(--primary-color); color: white; display: flex; flex-direction: column; z-index: 10; transition: background 0.3s; box-shadow: 2px 0 15px rgba(0,0,0,0.1);}
-        .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid #2d3748; }
+        .sidebar { width: 260px; background-color: var(--primary-color); color: white; display: flex; flex-direction: column; z-index: 10; transition: background 0.3s; box-shadow: 2px 0 15px rgba(0,0,0,0.1);}
+        .sidebar-header { padding: 25px 20px; text-align: center; border-bottom: 1px solid #2d3748; }
         .sidebar-header h2 { margin: 0; font-size: 20px; color: #63b3ed; letter-spacing: 1px;}
-        .sidebar-header p { margin: 5px 0 0; font-size: 11px; color: #a0aec0; letter-spacing: 0.5px;}
-        #tagAdmin { display: none; background: #d69e2e; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; margin-top: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
-        #infoFuncaoAtiva { display: inline-block; background: #2b6cb0; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-top: 10px; text-transform: uppercase; border: 1px solid #63b3ed; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
+        .sidebar-header p { margin: 5px 0 0; font-size: 12px; color: #a0aec0; letter-spacing: 0.5px;}
+        #tagAdmin { display: none; background: #d69e2e; color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; margin-top: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
+        #infoFuncaoAtiva { display: inline-block; background: #2b6cb0; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; margin-top: 15px; text-transform: uppercase; border: 1px solid #63b3ed; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
 
         .menu-items { flex-grow: 1; padding: 20px 0; display: flex; flex-direction: column; overflow-y: auto; }
-        .menu-btn { background: none; border: none; color: #a0aec0; padding: 15px 20px; text-align: left; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; position: relative;}
-        .menu-btn:hover { background-color: #2d3748; color: white; padding-left: 25px;}
-        .menu-btn.active { background-color: #d69e2e; color: white; border-left: 5px solid #ecc94b; box-shadow: inset 0px 0px 10px rgba(0,0,0,0.2); padding-left: 20px;}
+        .menu-btn { background: none; border: none; color: #a0aec0; padding: 16px 25px; text-align: left; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.2s ease; position: relative;}
+        .menu-btn:hover { background-color: #2d3748; color: white; padding-left: 30px;}
+        .menu-btn.active { background-color: #d69e2e; color: white; border-left: 5px solid #ecc94b; box-shadow: inset 0px 0px 10px rgba(0,0,0,0.2); padding-left: 25px; font-weight: 600;}
 
-        .sidebar-footer { padding: 20px; border-top: 1px solid #2d3748; }
-        .btn-global { width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; color: white; margin-bottom: 10px; font-size: 12px; transition: all 0.2s ease;}
+        .sidebar-footer { padding: 25px; border-top: 1px solid #2d3748; }
+        .btn-global { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; color: white; margin-bottom: 12px; font-size: 13px; transition: all 0.2s ease;}
         .btn-backup { background-color: #38a169; }
         .btn-logout { background-color: #e53e3e; margin-bottom: 0;}
         .btn-global:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2);}
@@ -96,78 +92,83 @@
         body.role-admin .menu-btn:hover:not(.active) { background-color: #7b2c2c; color: white; }
         body.role-admin .sidebar-header h2 { color: #fbd38d; }
 
-        /* CONTEÚDO PRINCIPAL */
-        .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; position: relative; }
-        .screen { display: none; animation: fadeIn 0.4s ease-out; background: white; padding: 30px; border-radius: 12px; box-shadow: var(--shadow-soft); min-height: 80vh; position: relative; overflow: hidden; border: 1px solid #e2e8f0;}
+        /* CONTEÚDO PRINCIPAL (Mais padding para respiro) */
+        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; position: relative; }
+        .screen { display: none; animation: fadeIn 0.4s ease-out; background: white; padding: 40px; border-radius: 16px; box-shadow: var(--shadow-soft); min-height: 80vh; position: relative; overflow: hidden; border: 1px solid #e2e8f0;}
         .screen.active { display: block; }
         .screen > * { position: relative; z-index: 1; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         /* COMPONENTES GERAIS */
-        h2 { margin-top: 0; color: var(--text-color); border-bottom: 2px solid #edf2f7; padding-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;}
-        .form-section { background: #f8fafc; padding: 25px; border-radius: 10px; border: 1px solid #e2e8f0; margin-bottom: 25px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);}
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; align-items: end; }
-        label { font-size: 11px; font-weight: bold; text-transform: uppercase; color: #4a5568; margin-bottom: 6px; display: block; letter-spacing: 0.5px;}
+        h2 { margin-top: 0; color: var(--text-color); border-bottom: 2px solid #edf2f7; padding-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; font-weight: 700;}
+        .form-section { background: #f8fafc; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 30px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);}
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; align-items: end; }
+        label { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #4a5568; margin-bottom: 8px; display: block; letter-spacing: 0.5px;}
         
         .mono-font { font-family: 'Courier New', Courier, monospace; font-weight: 600; letter-spacing: 0.5px; color: #2d3748; }
 
-        .btn { padding: 10px 15px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; color: white; transition: all 0.2s ease; }
+        .btn { padding: 12px 18px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; color: white; transition: all 0.2s ease; }
         .btn:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15);}
         .btn:active { transform: translateY(1px); box-shadow: none;}
         
-        .btn-save { background-color: #48bb78; width: 100%; padding: 12px;}
+        .btn-save { background-color: #48bb78; width: 100%; padding: 14px;}
         .btn-print { background-color: #718096; }
-        .btn-del { background-color: #e53e3e; padding: 6px 12px; font-size: 11px; }
-        .btn-edit { background-color: #3182ce; padding: 6px 12px; font-size: 11px; }
-        .btn-restore { background-color: #d69e2e; color: white; border: none; cursor: pointer; border-radius: 6px; font-weight: bold; padding: 12px;}
+        .btn-del { background-color: #e53e3e; padding: 8px 14px; font-size: 12px; }
+        .btn-edit { background-color: #3182ce; padding: 8px 14px; font-size: 12px; }
+        .btn-restore { background-color: #d69e2e; color: white; border: none; cursor: pointer; border-radius: 8px; font-weight: 600; padding: 14px;}
         
-        .btn-status-ok { background-color: #f0fdf4; color: #166534; border: 1px solid #86efac; padding: 5px; font-size: 11px; width: 80px; border-radius: 4px; font-weight: bold;}
-        .btn-status-pend { background-color: #fffaf0; color: #dd6b20; border: 1px solid #fbd38d; padding: 5px; font-size: 11px; width: 80px; border-radius: 4px; font-weight: bold; animation: pulse 2s infinite;}
+        .btn-status-ok { background-color: #f0fdf4; color: #166534; border: 1px solid #86efac; padding: 6px; font-size: 12px; width: 90px; border-radius: 6px; font-weight: 700;}
+        .btn-status-pend { background-color: #fffaf0; color: #dd6b20; border: 1px solid #fbd38d; padding: 6px; font-size: 12px; width: 90px; border-radius: 6px; font-weight: 700; animation: pulse 2s infinite;}
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(221, 107, 32, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(221, 107, 32, 0); } 100% { box-shadow: 0 0 0 0 rgba(221, 107, 32, 0); } }
 
-        /* TABELAS MODERNAS */
-        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 15px; font-size: 13px; position: relative; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;}
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0;}
-        th { background-color: #2d3748; color: white; position: sticky; top: -30px; z-index: 10; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;}
+        /* TABELAS MODERNAS E MAIS ESPAÇADAS */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 15px; font-size: 14px; position: relative; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;}
+        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid #e2e8f0;}
+        th { background-color: #2d3748; color: white; position: sticky; top: -40px; z-index: 10; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;}
         td { background-color: #fff; transition: background-color 0.2s ease;}
         tr:last-child td { border-bottom: none; }
         tbody tr:hover td { background-color: #ebf8ff !important; }
         tbody tr { transition: transform 0.2s ease; }
 
-        /* CARDS DO DASHBOARD */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; margin-bottom: 30px; }
-        .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 25px; display: flex; align-items: center; gap: 20px; box-shadow: var(--shadow-soft); transition: all 0.3s ease;}
-        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: #cbd5e1;}
-        .card-icon { font-size: 40px; }
-        .card-info h3 { margin: 0; font-size: 28px; color: #2d3748; }
-        .card-info p { margin: 0; font-size: 11px; color: #718096; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;}
+        /* INDICADORES VISUAIS PARA TABELAS (Status Laterais) */
+        tr.row-urgente td:first-child { box-shadow: inset 6px 0 0 0 #e53e3e; }
+        tr.row-sucesso td:first-child { box-shadow: inset 6px 0 0 0 #38a169; }
+        tr.row-atencao td:first-child { box-shadow: inset 6px 0 0 0 #dd6b20; }
 
-        .badge-siopm { padding: 5px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        /* CARDS DO DASHBOARD */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin-top: 25px; margin-bottom: 40px; }
+        .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 30px; display: flex; align-items: center; gap: 25px; box-shadow: var(--shadow-soft); transition: all 0.3s ease;}
+        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); border-color: #cbd5e1;}
+        .card-icon { font-size: 45px; }
+        .card-info h3 { margin: 0; font-size: 32px; color: #2d3748; font-weight: 700; }
+        .card-info p { margin: 0; font-size: 12px; color: #718096; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;}
+
+        .badge-siopm { padding: 6px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
         .badge-aberto { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
         .badge-encerrado { background-color: #f0fdf4; color: #166534; border: 1px solid #86efac; }
 
-        .secao-titulo { grid-column: 1 / -1; margin-top: 15px; margin-bottom: 15px; border-bottom: 2px solid #cbd5e1; color: #2d3748; padding-bottom: 5px; font-size: 18px;}
+        .secao-titulo { grid-column: 1 / -1; margin-top: 20px; margin-bottom: 20px; border-bottom: 2px solid #cbd5e1; color: #2d3748; padding-bottom: 10px; font-size: 20px; font-weight: 700;}
         
         /* CARDS DE SUPERVISÃO */
-        .grid-supervisao { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 30px; }
-        .card-sup { background: var(--primary-color); color: white; padding: 18px; border-radius: 10px; border-bottom: 4px solid #d4af37; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; box-shadow: var(--shadow-soft);}
+        .grid-supervisao { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-bottom: 35px; }
+        .card-sup { background: var(--primary-color); color: white; padding: 22px; border-radius: 12px; border-bottom: 4px solid #d4af37; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; box-shadow: var(--shadow-soft);}
         .card-sup:hover { transform: translateY(-4px); box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
-        .card-sup .funcao { font-size: 11px; font-weight: 900; opacity: 0.9; display: block; color: #fbd38d; text-transform: uppercase; letter-spacing: 0.5px;}
-        .card-sup .nome { font-size: 17px; font-weight: 700; margin-top: 4px; display: block;}
+        .card-sup .funcao { font-size: 12px; font-weight: 900; opacity: 0.9; display: block; color: #fbd38d; text-transform: uppercase; letter-spacing: 0.5px;}
+        .card-sup .nome { font-size: 18px; font-weight: 700; margin-top: 6px; display: block;}
         
         /* BLOCOS DE BATALHÃO (MAPA DE FORÇA) */
-        .bloco-bpm { border: 1px solid #cbd5e1; border-radius: 10px; margin-bottom: 25px; overflow: hidden; box-shadow: var(--shadow-soft); background: #fff;}
-        .header-bpm { background: #2b6cb0; padding: 12px 18px; font-weight: bold; color: white; text-transform: uppercase; font-size: 14px; letter-spacing: 0.5px;}
-        .linha-militar { display: flex; align-items: center; padding: 12px 18px; border-bottom: 1px solid #f1f5f9; transition: all 0.2s ease; border-left: 4px solid transparent;}
+        .bloco-bpm { border: 1px solid #cbd5e1; border-radius: 12px; margin-bottom: 30px; overflow: hidden; box-shadow: var(--shadow-soft); background: #fff;}
+        .header-bpm { background: #2b6cb0; padding: 15px 20px; font-weight: 700; color: white; text-transform: uppercase; font-size: 15px; letter-spacing: 0.5px;}
+        .linha-militar { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid #f1f5f9; transition: all 0.2s ease; border-left: 4px solid transparent;}
         .linha-militar.cfp { border-left-color: #e53e3e; background: #fffafaf;} 
         .linha-militar.cgp { padding-left: 20px; border-left-color: #38a169;}
         .linha-militar:hover { background-color: #ebf8ff; border-left-color: #3182ce; }
         .linha-militar:last-child { border-bottom: none; }
         
-        .badge { padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: bold; letter-spacing: 0.5px;}
+        .badge { padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;}
         .badge-cfp { background: var(--cfp-bg); color: var(--cfp-text); border: 1px solid #fca5a5;} 
         .badge-cgp { background: var(--cgp-bg); color: var(--cgp-text); border: 1px solid #86efac;}
-        .info-funcao { width: 65px; } .info-nome { flex-grow: 1; font-weight: bold; color: #2d3748;} .info-cia { width: 80px; text-align: center; color: #4a5568; font-size: 12px;} .info-tel { width: 130px; color: #718096; }
+        .info-funcao { width: 75px; } .info-nome { flex-grow: 1; font-weight: 600; color: #2d3748;} .info-cia { width: 90px; text-align: center; color: #4a5568; font-size: 13px;} .info-tel { width: 140px; color: #718096; }
 
         /* CONTROLE DE VISIBILIDADE HIERÁRQUICA */
         #printIndividual, #printRelatorioGeral { display: none; }
@@ -209,7 +210,7 @@
         }
 
         #modal-inatividade { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; justify-content: center; align-items: center; backdrop-filter: blur(3px);}
-        .modal-box { background: white; padding: 30px; border-radius: 12px; text-align: center; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .modal-box { background: white; padding: 40px; border-radius: 16px; text-align: center; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
     </style>
 </head>
 <body>
@@ -217,7 +218,7 @@
     <div id="modal-inatividade">
         <div class="modal-box">
             <h2 style="color: #e53e3e; justify-content: center; border-bottom: none;">⚠️ Sessão Expirada</h2>
-            <p style="color: #4a5568; font-size: 14px; margin-bottom: 25px;">Por questões de segurança, a sua sessão foi encerrada devido a 15 minutos de inatividade.</p>
+            <p style="color: #4a5568; font-size: 15px; margin-bottom: 30px;">Por questões de segurança, a sua sessão foi encerrada devido a 15 minutos de inatividade.</p>
             <button class="btn btn-save" style="background-color: #2b6cb0;" onclick="location.reload()">Fazer Login Novamente</button>
         </div>
     </div>
@@ -226,15 +227,15 @@
         <div class="login-box">
             <div class="logos-login-container">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Bras%C3%A3o_PMSP.PNG" alt="Brasão PMESP" class="logo-pmesp-login">
-                <img src="download.png" alt="Logo COPOM" class="logo-copom-login">
+                <img src="download.png" alt="Logo COPOM" class="logo-copom-login" onerror="this.style.display='none'">
             </div>
             
-            <h1 style="color:#2b6cb0; margin-top:0; font-size: 26px;">COPOM Supervisores</h1>
-            <p style="color:#718096; font-size:11px; margin-bottom:30px; font-weight: bold; letter-spacing: 0.5px;">POLÍCIA MILITAR DO ESTADO DE SÃO PAULO</p>
+            <h1 style="color:#2b6cb0; margin-top:0; font-size: 28px; font-weight: 900;">COPOM Supervisores</h1>
+            <p style="color:#718096; font-size:12px; margin-bottom:30px; font-weight: 700; letter-spacing: 0.5px;">POLÍCIA MILITAR DO ESTADO DE SÃO PAULO</p>
             <input type="email" id="loginEmail" placeholder="Digite o seu e-mail">
             <input type="password" id="loginSenha" placeholder="Digite a sua senha">
             <button onclick="fazerLogin()">Acessar Sistema</button>
-            <div style="margin: 20px 0; color: #a0aec0; font-size: 12px; font-weight: bold; text-transform: uppercase;">Ou conecte com</div>
+            <div style="margin: 20px 0; color: #a0aec0; font-size: 13px; font-weight: 700; text-transform: uppercase;">Ou conecte com</div>
             <button onclick="fazerLoginGoogle()" style="background-color: #4285F4; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px;">
                 <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24">
                     <path fill="#fff" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -244,19 +245,19 @@
                 </svg>
                 Google Corporativo
             </button>
-            <p id="msgErroLogin" style="color:#e53e3e; font-size:13px; display:none; margin-top:20px; font-weight:bold;">Usuário ou senha incorretos.</p>
+            <p id="msgErroLogin" style="color:#e53e3e; font-size:14px; display:none; margin-top:20px; font-weight:700;">Usuário ou senha incorretos.</p>
         </div>
     </div>
 
     <div id="role-selection-screen">
         <div class="role-box">
-            <img src="download.png" alt="Logo COPOM" style="width: 90px; margin-bottom: 15px;">
-            <h2 style="margin-top:0; border:none; justify-content:center; color:#1a202c; font-size: 24px;">Mesa de Operações</h2>
-            <p style="font-size:14px; color:#718096; margin-bottom:25px;">Selecione o seu Posto de Serviço para assumir o turno:</p>
+            <img src="download.png" alt="Logo COPOM" style="width: 90px; margin-bottom: 15px;" onerror="this.style.display='none'">
+            <h2 style="margin-top:0; border:none; justify-content:center; color:#1a202c; font-size: 26px;">Mesa de Operações</h2>
+            <p style="font-size:15px; color:#718096; margin-bottom:30px;">Selecione o seu Posto de Serviço para assumir o turno:</p>
             <div id="gridPostos" class="role-grid"></div>
-            <div style="margin-top:25px; display:flex; gap:15px;">
-                <button class="btn btn-save" style="flex:1; padding:15px; font-size:16px;" onclick="confirmarPosto()">✅ Assumir Serviço</button>
-                <button class="btn" style="background:#718096; padding:15px;" onclick="fazerLogout()">Sair / Cancelar</button>
+            <div style="margin-top:30px; display:flex; gap:15px;">
+                <button class="btn btn-save" style="flex:1; padding:16px; font-size:16px;" onclick="confirmarPosto()">✅ Assumir Serviço</button>
+                <button class="btn" style="background:#718096; padding:16px;" onclick="fazerLogout()">Sair / Cancelar</button>
             </div>
         </div>
     </div>
@@ -267,7 +268,7 @@
     <div id="app-container">
         <div class="sidebar">
             <div class="sidebar-header">
-                <img src="download.png" alt="Logo COPOM" class="logo-copom-sidebar">
+                <img src="download.png" alt="Logo COPOM" class="logo-copom-sidebar" onerror="this.style.display='none'">
                 <h2>COPOM</h2><p>Supervisores ☁️</p>
                 <div id="tagAdmin">👑 PRIVILÉGIO ADMIN</div>
                 <div id="infoFuncaoAtiva">AGUARDANDO POSTO...</div>
@@ -294,13 +295,11 @@
         <div class="main-content">
             
             <div id="tela-dashboard" class="screen active">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Bras%C3%A3o_PMSP.PNG" alt="Brasão PMESP" class="watermark-bg">
-
-                <div id="banner-pendente" style="display:none; background-color: #fefcbf; color: #975a16; border-left: 4px solid #d69e2e; padding: 18px; border-radius: 8px; margin-bottom: 25px; font-size: 15px; box-shadow: var(--shadow-soft);">
+                <div id="banner-pendente" style="display:none; background-color: #fefcbf; color: #975a16; border-left: 5px solid #d69e2e; padding: 20px; border-radius: 12px; margin-bottom: 30px; font-size: 15px; box-shadow: var(--shadow-soft);">
                     <strong>⚠️ Sala de Espera:</strong> O seu perfil foi registado e encontra-se pendente. O seu acesso está limitado até o Comandante aprovar a sua conta.
                 </div>
 
-                <h2>Visão Geral da Operação <span style="font-size: 12px; color: #38a169; background: #f0fdf4; padding: 5px 12px; border-radius: 15px; border: 1px solid #bbf7d0;">🟢 Online</span></h2>
+                <h2>Visão Geral da Operação <span style="font-size: 13px; color: #38a169; background: #f0fdf4; padding: 6px 14px; border-radius: 20px; border: 1px solid #bbf7d0;">🟢 Online</span></h2>
                 
                 <div class="dashboard-grid">
                     <div class="card"><div class="card-icon">👮</div><div class="card-info"><h3 id="dashEfetivo">0</h3><p>Efetivo Total Cadastrado</p></div></div>
@@ -308,19 +307,19 @@
                     <div class="card" style="border-left: 5px solid #d69e2e;"><div class="card-icon">🚛</div><div class="card-info"><h3 id="dashGuinchos">0</h3><p>Seus Guinchos (Hoje/Ontem)</p></div></div>
                 </div>
 
-                <div id="painelMesaAdmin" class="only-admin" style="margin-top: 35px; margin-bottom: 35px;"></div>
+                <div id="painelMesaAdmin" class="only-admin" style="margin-top: 40px; margin-bottom: 40px;"></div>
 
-                <div id="box-relatorio-dashboard" style="text-align: center; background: #fff; padding: 40px; border-radius: 12px; border: 1px solid #cbd5e1; box-shadow: var(--shadow-soft);" class="no-print">
-                    <h3 style="margin-top: 0; color: #2d3748; font-size: 24px;">Resumo Diário de Serviço (Dossiê)</h3>
-                    <p style="color: #718096; font-size: 14px; margin-bottom: 25px; line-height: 1.5;">Gera o relatório oficial com o Mapa de Força, Guinchos, SIOPM e Ocorrências.<br>
+                <div id="box-relatorio-dashboard" style="text-align: center; background: #fff; padding: 45px; border-radius: 16px; border: 1px solid #cbd5e1; box-shadow: var(--shadow-soft);" class="no-print">
+                    <h3 style="margin-top: 0; color: #2d3748; font-size: 26px; font-weight: 700;">Resumo Diário de Serviço (Dossiê)</h3>
+                    <p style="color: #718096; font-size: 15px; margin-bottom: 30px; line-height: 1.6;">Gera o relatório oficial com o Mapa de Força, Guinchos, SIOPM e Ocorrências.<br>
                     <strong style="color: #c53030;">Dica Tática:</strong> Insira um asterisco (*) no Talão da Ocorrência para detalhar o Histórico no documento PDF.</p>
                     
-                    <div style="background: #f8fafc; padding: 20px; border-radius: 8px; display: inline-block; margin-bottom: 25px; border: 1px solid #e2e8f0;">
-                        <label style="font-weight: bold; color: #2b6cb0; font-size: 14px; margin-right: 15px; display: inline;">Data do Plantão:</label>
-                        <input type="date" id="dataRelatorioDashboard" style="padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; font-weight: bold; color: #2d3748; outline: none; width: auto; display: inline; margin-bottom: 0;" class="mono-font">
+                    <div style="background: #f8fafc; padding: 25px; border-radius: 12px; display: inline-block; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+                        <label style="font-weight: 700; color: #2b6cb0; font-size: 15px; margin-right: 15px; display: inline;">Data do Plantão:</label>
+                        <input type="date" id="dataRelatorioDashboard" style="padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-weight: 600; color: #2d3748; outline: none; width: auto; display: inline; margin-bottom: 0;" class="mono-font">
                     </div>
                     <br>
-                    <button class="btn btn-save" style="padding: 16px 45px; font-size: 18px; width: auto; background-color: #2b6cb0; box-shadow: 0 4px 15px rgba(43, 108, 176, 0.3);" onclick="imprimirRelatorioGeral()">🖨️ Imprimir Relatório Completo do Turno</button>
+                    <button class="btn btn-save" style="padding: 18px 50px; font-size: 18px; width: auto; background-color: #2b6cb0; box-shadow: 0 4px 15px rgba(43, 108, 176, 0.3);" onclick="imprimirRelatorioGeral()">🖨️ Imprimir Relatório Completo do Turno</button>
                 </div>
             </div>
 
@@ -337,23 +336,23 @@
                         <div><label>Período</label><select id="sPeriodo"><option value="Dia">Dia</option><option value="Noite">Noite</option></select></div>
                         <div>
                             <button class="btn btn-save" id="btnSalvarSiopm" onclick="salvarSiopm()">➕ Gerar Talão</button>
-                            <button class="btn btn-restore" id="btnCancelarSiopm" onclick="cancelarEdicaoSiopm()" style="display:none; margin-top: 5px; width: 100%; padding: 8px;">Cancelar Edição</button>
+                            <button class="btn btn-restore" id="btnCancelarSiopm" onclick="cancelarEdicaoSiopm()" style="display:none; margin-top: 5px; width: 100%; padding: 10px;">Cancelar Edição</button>
                         </div>
                     </div>
                 </div>
                 
-                <div class="filtros-siopm no-print" style="background: #f8fafc; padding: 18px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; display: flex; gap: 15px; align-items: center;">
-                    <strong style="color: #4a5568;">🔍 Filtros Rápidos:</strong>
-                    <select id="filtroSiopmBpm" onchange="listarSiopm()" style="width: 180px; margin-bottom: 0;"></select>
-                    <select id="filtroSiopmStatus" onchange="listarSiopm()" style="width: 180px; margin-bottom: 0;">
+                <div class="filtros-siopm no-print" style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px; display: flex; gap: 15px; align-items: center;">
+                    <strong style="color: #4a5568; font-size: 14px;">🔍 Filtros Rápidos:</strong>
+                    <select id="filtroSiopmBpm" onchange="listarSiopm()" style="width: 200px; margin-bottom: 0;"></select>
+                    <select id="filtroSiopmStatus" onchange="listarSiopm()" style="width: 200px; margin-bottom: 0;">
                         <option value="todos">Todos os Status</option><option value="Aberto">Abertos</option><option value="Encerrado">Encerrados</option>
                     </select>
                 </div>
                 
-                <p style="color: #718096; font-size: 13px; margin-top: -5px; font-weight: bold;">⚠️ Mostrando apenas os talões de HOJE e os talões de dias anteriores que ainda estão em aberto.</p>
+                <p style="color: #718096; font-size: 14px; margin-top: -5px; font-weight: 600;">⚠️ Mostrando apenas os talões de HOJE e os talões de dias anteriores que ainda estão em aberto.</p>
                 
                 <table>
-                    <thead><tr><th style="width: 100px;">Data</th><th style="width: 120px;">Batalhão</th><th style="width: 100px;">Nº Talão</th><th style="width: 80px;">Período</th><th>Desfecho</th><th>Status</th><th class="no-print" style="width: 150px;">Ações</th></tr></thead>
+                    <thead><tr><th style="width: 110px;">Data</th><th style="width: 130px;">Batalhão</th><th style="width: 120px;">Nº Talão</th><th style="width: 90px;">Período</th><th>Desfecho</th><th>Status</th><th class="no-print" style="width: 160px;">Ações</th></tr></thead>
                     <tbody id="tabelaSiopm"></tbody>
                 </table>
             </div>
@@ -361,64 +360,64 @@
             <div id="tela-efetivo" class="screen">
                 <h2>
                     <span>Base Única de Policiais (Contatos)</span>
-                    <span id="contadorEfetivo" style="font-size: 13px; color: #4a5568; background: #e2e8f0; padding: 6px 15px; border-radius: 20px; font-weight: bold; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);">0 cadastrados</span>
+                    <span id="contadorEfetivo" style="font-size: 14px; color: #4a5568; background: #e2e8f0; padding: 8px 18px; border-radius: 25px; font-weight: 700; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);">0 cadastrados</span>
                 </h2>
-                <div class="no-print" style="background: #fff; padding: 25px; border-radius: 10px; border: 1px solid #cbd5e1; border-left: 5px solid #3182ce; margin-bottom: 25px; box-shadow: var(--shadow-soft);">
-                    <label style="font-size: 14px; font-weight: bold; color: #2d3748; margin-bottom: 12px; display: block;">Pesquisar na Base de Dados</label>
-                    <input type="text" id="buscaEfetivo" placeholder="🔍 Digite o Nome, Posto ou Unidade do policial para buscar..." onkeyup="listarEfetivo()" style="width: 100%; max-width: none; padding: 16px; border-radius: 30px; border: 2px solid #e2e8f0; font-size: 15px; background: #f8fafc; margin-bottom: 0;">
+                <div class="no-print" style="background: #fff; padding: 30px; border-radius: 16px; border: 1px solid #cbd5e1; border-left: 6px solid #3182ce; margin-bottom: 30px; box-shadow: var(--shadow-soft);">
+                    <label style="font-size: 15px; font-weight: 700; color: #2d3748; margin-bottom: 15px; display: block;">Pesquisar na Base de Dados</label>
+                    <input type="text" id="buscaEfetivo" placeholder="🔍 Digite o Nome, Posto ou Unidade do policial para buscar..." onkeyup="listarEfetivo()" style="width: 100%; max-width: none; padding: 18px; border-radius: 30px; border: 2px solid #e2e8f0; font-size: 16px; background: #f8fafc; margin-bottom: 0;">
                 </div>
-                <details id="detailsEfetivo" class="no-print hide-leitura" style="margin-bottom: 25px; background: #f8fafc; padding: 18px 25px; border: 1px solid #e2e8f0; border-radius: 10px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);">
-                    <summary style="font-weight: bold; cursor: pointer; color: #2b6cb0; font-size: 15px; outline: none; list-style: none; display: flex; align-items: center; gap: 8px;">
-                        <span style="background: #ebf8ff; padding: 5px; border-radius: 50%;">➕</span> Cadastrar ou Editar Policial
+                <details id="detailsEfetivo" class="no-print hide-leitura" style="margin-bottom: 30px; background: #f8fafc; padding: 20px 30px; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);">
+                    <summary style="font-weight: 700; cursor: pointer; color: #2b6cb0; font-size: 16px; outline: none; list-style: none; display: flex; align-items: center; gap: 10px;">
+                        <span style="background: #ebf8ff; padding: 6px; border-radius: 50%;">➕</span> Cadastrar ou Editar Policial
                     </summary>
-                    <div class="form-grid" style="margin-top: 20px;">
+                    <div class="form-grid" style="margin-top: 25px;">
                         <input type="hidden" id="eId">
                         <div style="grid-column: span 2;"><label>Posto / Grad. e Nome</label><input type="text" id="eNome" placeholder="Ex: 1º SGT PM SILVA"></div>
                         <div>
                             <label>Unidade / BPM</label>
                             <select id="eUnidade" onchange="verificarUnidadeOutros()"></select>
-                            <input type="text" id="eUnidadeOutro" placeholder="Qual unidade?" style="display:none; margin-top:8px; border-color:#2b6cb0; border-width: 2px;">
+                            <input type="text" id="eUnidadeOutro" placeholder="Qual unidade?" style="display:none; margin-top:10px; border-color:#2b6cb0; border-width: 2px;">
                         </div>
                         <div><label>Telefone</label><input type="text" id="eTel" placeholder="Ex: 11988887777" class="mono-font"></div>
-                        <div style="grid-column: span 2; display: flex; gap: 10px;">
-                            <button class="btn btn-save" id="btnSalvarEfetivo" onclick="salvarEfetivo()" style="padding: 14px; font-size: 14px;">💾 Salvar na Base Oficial</button>
-                            <button class="btn btn-restore" id="btnCancelarEfetivo" onclick="cancelarEdicaoEfetivo()" style="display:none; padding: 14px;">Cancelar Edição</button>
+                        <div style="grid-column: span 2; display: flex; gap: 12px;">
+                            <button class="btn btn-save" id="btnSalvarEfetivo" onclick="salvarEfetivo()" style="padding: 16px; font-size: 15px;">💾 Salvar na Base Oficial</button>
+                            <button class="btn btn-restore" id="btnCancelarEfetivo" onclick="cancelarEdicaoEfetivo()" style="display:none; padding: 16px;">Cancelar Edição</button>
                         </div>
                     </div>
                 </details>
                 <table>
-                    <thead><tr><th>Nome / Posto</th><th style="width: 250px;">Unidade</th><th style="width: 180px;">Telefone</th><th class="no-print" style="width: 100px;">Ações</th></tr></thead>
-                    <tbody id="tabelaEfetivo"><tr><td colspan='4' style='text-align:center; color:#718096; padding: 30px; font-size: 14px;'>Aguardando pesquisa. Utilize a barra de busca acima.</td></tr></tbody>
+                    <thead><tr><th>Nome / Posto</th><th style="width: 280px;">Unidade</th><th style="width: 200px;">Telefone</th><th class="no-print" style="width: 120px;">Ações</th></tr></thead>
+                    <tbody id="tabelaEfetivo"><tr><td colspan='4' style='text-align:center; color:#718096; padding: 40px; font-size: 15px;'>Aguardando pesquisa. Utilize a barra de busca acima.</td></tr></tbody>
                 </table>
             </div>
 
             <div id="tela-mapa" class="screen">
                 <h2>
                     <span>Mapa de Força Operacional (Individual)</span>
-                    <div class="no-print" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                        <button class="btn" style="background: #edf2f7; color: #2b6cb0; border: 1px solid #cbd5e1; padding: 10px 18px; font-size: 13px;" onclick="setMapaDataRapida(0)">Hoje</button>
-                        <button class="btn" style="background: #edf2f7; color: #4a5568; border: 1px solid #cbd5e1; padding: 10px 18px; font-size: 13px;" onclick="setMapaDataRapida(1)">Ontem</button>
-                        <input type="date" id="dataMapa" onchange="carregarMapaDoDia()" style="width:auto; padding: 9px; font-weight: bold; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; color: #2d3748; margin-bottom: 0;" class="mono-font">
+                    <div class="no-print" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                        <button class="btn" style="background: #edf2f7; color: #2b6cb0; border: 1px solid #cbd5e1; padding: 12px 20px; font-size: 14px;" onclick="setMapaDataRapida(0)">Hoje</button>
+                        <button class="btn" style="background: #edf2f7; color: #4a5568; border: 1px solid #cbd5e1; padding: 12px 20px; font-size: 14px;" onclick="setMapaDataRapida(1)">Ontem</button>
+                        <input type="date" id="dataMapa" onchange="carregarMapaDoDia()" style="width:auto; padding: 11px; font-weight: 700; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; color: #2d3748; margin-bottom: 0;" class="mono-font">
                         
-                        <select id="filtroAdminUsuarioMapa" class="only-admin" style="padding: 9px; background: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: 6px; font-weight: bold; font-size: 13px; margin-left: 10px; margin-bottom: 0;" onchange="carregarMapaDoDia()">
+                        <select id="filtroAdminUsuarioMapa" class="only-admin" style="padding: 11px; background: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: 8px; font-weight: 700; font-size: 14px; margin-left: 12px; margin-bottom: 0;" onchange="carregarMapaDoDia()">
                             <option value="todos">👑 Admin: Todos os Postos</option>
                         </select>
 
-                        <button class="btn btn-print" style="margin-left: 10px; padding: 10px 20px;" onclick="imprimirTela('mapa')">🖨️ Imprimir PDF</button>
+                        <button class="btn btn-print" style="margin-left: 12px; padding: 12px 25px;" onclick="imprimirTela('mapa')">🖨️ Imprimir PDF</button>
                     </div>
                 </h2>
                 
                 <div class="form-section no-print hide-leitura" id="formMapaArea" style="transition: 0.3s;">
-                    <div id="avisoEdicaoMapa" style="display:none; color:#d69e2e; font-weight:bold; font-size:14px; margin-bottom:20px; border-bottom:1px dashed #d69e2e; padding-bottom:10px;">⚠️ MODO DE EDIÇÃO ATIVADO - Atualizando dados do militar no turno</div>
+                    <div id="avisoEdicaoMapa" style="display:none; color:#d69e2e; font-weight:700; font-size:15px; margin-bottom:25px; border-bottom:1px dashed #d69e2e; padding-bottom:12px;">⚠️ MODO DE EDIÇÃO ATIVADO - Atualizando dados do militar no turno</div>
                     <input type="hidden" id="mId">
                     <div class="form-grid">
                         <div><label>Função</label><select id="mFuncao"><option>SUP SOBREAVISO</option><option>SUP REGIONAL</option><option>PPJMD</option><option>CFP</option><option>CGP</option></select></div>
                         <div><label>Militar (Digite para buscar)</label><input type="text" id="mNome" list="listaEfetivoMapa" oninput="autoPreencherMapa(this.value)"><datalist id="listaEfetivoMapa"></datalist></div>
-                        <div><label>BPM</label><input type="text" id="mUnidade" readonly style="background:#edf2f7; border-color: #e2e8f0; color: #718096; font-weight: bold;"></div>
+                        <div><label>BPM</label><input type="text" id="mUnidade" readonly style="background:#edf2f7; border-color: #e2e8f0; color: #718096; font-weight: 700;"></div>
                         <div><label>Cia</label><select id="mCia"><option>-</option><option>1ª CIA</option><option>2ª CIA</option><option>3ª CIA</option><option>4ª CIA</option><option>5ª CIA</option></select></div>
-                        <div style="display: flex; gap: 8px; align-items: end;">
-                            <button class="btn btn-save" id="btnSalvarMapa" onclick="adicionarEscalaMapa()" style="padding: 12px;">➕ Lançar na Escala</button>
-                            <button class="btn btn-restore" id="btnCancelarMapa" onclick="cancelarEdicaoMapa()" style="display:none; padding: 12px;">Cancelar</button>
+                        <div style="display: flex; gap: 10px; align-items: end;">
+                            <button class="btn btn-save" id="btnSalvarMapa" onclick="adicionarEscalaMapa()" style="padding: 14px;">➕ Lançar na Escala</button>
+                            <button class="btn btn-restore" id="btnCancelarMapa" onclick="cancelarEdicaoMapa()" style="display:none; padding: 14px;">Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -434,37 +433,37 @@
                     </div>
                 </h2>
                 
-                <details class="no-print" style="margin-bottom: 20px; background: #f8fafc; padding: 18px; border-radius: 10px; border: 1px solid #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
-                    <summary style="font-weight: bold; cursor: pointer; color: #2b6cb0; font-size: 14px; outline: none; list-style: none; display: flex; align-items: center; gap: 8px;">
-                        <span style="background: #ebf8ff; padding: 5px; border-radius: 50%;">🗄️</span> Buscar Ocorrência Antiga no Servidor
+                <details class="no-print" style="margin-bottom: 25px; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                    <summary style="font-weight: 700; cursor: pointer; color: #2b6cb0; font-size: 15px; outline: none; list-style: none; display: flex; align-items: center; gap: 10px;">
+                        <span style="background: #ebf8ff; padding: 6px; border-radius: 50%;">🗄️</span> Buscar Ocorrência Antiga no Servidor
                     </summary>
-                    <div style="margin-top: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                        <input type="text" id="buscaServidorTalao" placeholder="Digite Talão, BPM ou trecho do Histórico..." style="width: 400px; padding: 12px; margin-bottom: 0;" class="mono-font">
-                        <button class="btn btn-print" onclick="buscarNoArquivoOcorrencia()" style="padding: 12px 25px; background: #4a5568;">Pesquisar nos Arquivos</button>
+                    <div style="margin-top: 25px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                        <input type="text" id="buscaServidorTalao" placeholder="Digite Talão, BPM ou trecho do Histórico..." style="width: 420px; padding: 14px; margin-bottom: 0;" class="mono-font">
+                        <button class="btn btn-print" onclick="buscarNoArquivoOcorrencia()" style="padding: 14px 30px; background: #4a5568;">Pesquisar nos Arquivos</button>
                     </div>
-                    <div id="resultadoArquivo" style="margin-top: 20px;"></div>
+                    <div id="resultadoArquivo" style="margin-top: 25px;"></div>
                 </details>
 
                 <div class="form-section no-print hide-leitura">
                     <input type="hidden" id="oId">
                     <div class="form-grid">
-                        <div><label>Batalhão</label><select id="oBpm" onchange="verificarBpmOcorrenciaOutros()"></select><input type="text" id="oBpmOutro" placeholder="Qual batalhão?" style="display:none; margin-top:8px; border-color:#2b6cb0; border-width: 2px;"></div>
+                        <div><label>Batalhão</label><select id="oBpm" onchange="verificarBpmOcorrenciaOutros()"></select><input type="text" id="oBpmOutro" placeholder="Qual batalhão?" style="display:none; margin-top:10px; border-color:#2b6cb0; border-width: 2px;"></div>
                         <div><label>Talão COPOM</label><input type="text" id="oTalao" placeholder="Ex: 4589 ou 4589*" class="mono-font"></div>
                         <div style="grid-column: span 2;"><label>Histórico da Ocorrência</label><textarea id="oHistorico" rows="4" placeholder="Descreva os detalhes. (Obrigatório se usar * no talão)"></textarea></div>
-                        <div style="grid-column: span 2; display: flex; gap: 10px; align-items: end;">
-                            <button class="btn btn-save" onclick="salvarOcorrencia()" style="width: auto; padding: 14px 25px;">💾 Registrar Ocorrência</button>
-                            <button class="btn btn-restore" id="btnCancelarOcorrencia" onclick="cancelarEdicaoOcorrencia()" style="display:none; padding: 14px 20px;">Cancelar Edição</button>
+                        <div style="grid-column: span 2; display: flex; gap: 12px; align-items: end;">
+                            <button class="btn btn-save" onclick="salvarOcorrencia()" style="width: auto; padding: 16px 30px;">💾 Registrar Ocorrência</button>
+                            <button class="btn btn-restore" id="btnCancelarOcorrencia" onclick="cancelarEdicaoOcorrencia()" style="display:none; padding: 16px 25px;">Cancelar Edição</button>
                         </div>
                     </div>
                 </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <p style="color: #718096; font-size: 13px; font-weight: bold; margin: 0;">⚠️ Mostrando apenas ocorrências dos últimos 4 dias.</p>
-                    <input type="text" id="buscaOcorrencia" placeholder="🔍 Filtrar lista abaixo..." onkeyup="listarOcorrencias()" style="width: 300px; padding: 10px 15px; border-radius: 20px; border: 2px solid #cbd5e1; margin-bottom: 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <p style="color: #718096; font-size: 14px; font-weight: 600; margin: 0;">⚠️ Mostrando apenas ocorrências dos últimos 4 dias.</p>
+                    <input type="text" id="buscaOcorrencia" placeholder="🔍 Filtrar lista abaixo..." onkeyup="listarOcorrencias()" style="width: 320px; padding: 12px 18px; border-radius: 25px; border: 2px solid #cbd5e1; margin-bottom: 0;">
                 </div>
 
                 <table>
-                    <thead><tr><th style="width:100px;">Data</th><th style="width:120px;">BPM</th><th style="width:120px;">Talão</th><th>Histórico</th><th class="no-print" style="width:160px;">Ações</th></tr></thead>
+                    <thead><tr><th style="width:110px;">Data</th><th style="width:130px;">BPM</th><th style="width:140px;">Talão</th><th>Histórico</th><th class="no-print" style="width:170px;">Ações</th></tr></thead>
                     <tbody id="tabelaOcorrencias"></tbody>
                 </table>
             </div>
@@ -477,14 +476,14 @@
                     </div>
                 </h2>
                 
-                <details class="no-print hide-leitura" style="margin-bottom: 25px; background: #f8fafc; padding: 18px 25px; border: 1px solid #e2e8f0; border-radius: 10px;">
-                    <summary style="font-weight: bold; cursor: pointer; color: #2b6cb0; font-size: 14px; outline: none; list-style: none; display: flex; align-items: center; gap: 8px;">
-                        <span style="background: #ebf8ff; padding: 5px; border-radius: 50%;">➕</span> Cadastrar Novo Motorista de Guincho Civil
+                <details class="no-print hide-leitura" style="margin-bottom: 30px; background: #f8fafc; padding: 20px 30px; border: 1px solid #e2e8f0; border-radius: 12px;">
+                    <summary style="font-weight: 700; cursor: pointer; color: #2b6cb0; font-size: 15px; outline: none; list-style: none; display: flex; align-items: center; gap: 10px;">
+                        <span style="background: #ebf8ff; padding: 6px; border-radius: 50%;">➕</span> Cadastrar Novo Motorista de Guincho Civil
                     </summary>
-                    <div class="form-grid" style="margin-top: 20px;">
+                    <div class="form-grid" style="margin-top: 25px;">
                         <div><label>Nome Completo do Motorista</label><input type="text" id="cadMotNome" placeholder="Ex: João da Silva"></div>
                         <div><label>CPF Oficial</label><input type="text" id="cadMotCpf" placeholder="Ex: 000.000.000-00" class="mono-font"></div>
-                        <div><button class="btn btn-save" onclick="salvarNovoMotorista()" style="padding: 12px;">💾 Cadastrar na Base</button></div>
+                        <div><button class="btn btn-save" onclick="salvarNovoMotorista()" style="padding: 14px;">💾 Cadastrar na Base</button></div>
                     </div>
                 </details>
 
@@ -495,16 +494,16 @@
                         <div><label>BPM Solicitante</label><select id="gBpm"></select></div>
                         <div><label>Talão COPOM</label><input type="text" id="gTalao" class="mono-font"></div>
                         <div><label>Pátio Destino</label><input type="text" id="gPatio" placeholder="Nome do Pátio"></div>
-                        <div><button class="btn btn-save" onclick="salvarGuincho()" style="padding: 12px;">Despachar Guincho</button></div>
+                        <div><button class="btn btn-save" onclick="salvarGuincho()" style="padding: 14px;">Despachar Guincho</button></div>
                     </div>
                 </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <input type="text" id="buscaGuincho" placeholder="🔍 Pesquisar despachos..." onkeyup="listarGuinchos()" style="width: 350px; padding: 12px 15px; border-radius: 25px; border: 2px solid #3182ce; margin-bottom: 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <input type="text" id="buscaGuincho" placeholder="🔍 Pesquisar despachos..." onkeyup="listarGuinchos()" style="width: 380px; padding: 14px 20px; border-radius: 30px; border: 2px solid #3182ce; margin-bottom: 0;">
                 </div>
 
                 <table>
-                    <thead><tr><th style="width:130px;">Data / Hora</th><th>Motorista Responsável</th><th style="width:100px;">Placa</th><th style="width:120px;">BPM</th><th style="width:100px;">Talão</th><th>Pátio Destino</th><th class="no-print" style="width:100px;">Acompanhamento</th><th class="no-print" style="width:60px;">Ação</th></tr></thead>
+                    <thead><tr><th style="width:140px;">Data / Hora</th><th>Motorista Responsável</th><th style="width:110px;">Placa</th><th style="width:130px;">BPM</th><th style="width:110px;">Talão</th><th>Pátio Destino</th><th class="no-print" style="width:110px;">Acompanhamento</th><th class="no-print" style="width:70px;">Ação</th></tr></thead>
                     <tbody id="tabelaGuinchos"></tbody>
                 </table>
             </div>
@@ -512,31 +511,31 @@
             <div id="tela-usuarios" class="screen">
                 <h2><span>🛡️ Segurança e Gestão de Perfis</span></h2>
                 
-                <div style="background:#f8fafc; padding:25px; border-left:6px solid #d69e2e; margin-bottom:30px; border-radius:8px; box-shadow: var(--shadow-soft);">
-                    <h3 style="margin:0 0 20px 0; font-size:16px; color:#2d3748; text-transform: uppercase;">⚡ Triagem e Aprovação de Novo Utilizador</h3>
-                    <div style="display:flex; gap:15px; align-items:center; flex-wrap: wrap;">
-                        <input type="email" id="admNewEmail" placeholder="E-mail da Polícia (@policiamilitar.sp.gov.br ou @gmail.com)" style="width:350px; margin-bottom: 0;">
-                        <select id="admNewCargo" style="width:200px; margin-bottom: 0;">
+                <div style="background:#f8fafc; padding:30px; border-left:6px solid #d69e2e; margin-bottom:35px; border-radius:12px; box-shadow: var(--shadow-soft);">
+                    <h3 style="margin:0 0 25px 0; font-size:17px; color:#2d3748; text-transform: uppercase; font-weight: 700;">⚡ Triagem e Aprovação de Novo Utilizador</h3>
+                    <div style="display:flex; gap:18px; align-items:center; flex-wrap: wrap;">
+                        <input type="email" id="admNewEmail" placeholder="E-mail da Polícia (@policiamilitar.sp.gov.br ou @gmail.com)" style="width:380px; margin-bottom: 0;">
+                        <select id="admNewCargo" style="width:220px; margin-bottom: 0;">
                             <option value="admin">Administrador (Total)</option>
                             <option value="operador" selected>Operador (Escrita Restrita)</option>
                             <option value="leitura">Somente Leitura</option>
                         </select>
-                        <button class="btn btn-save" style="width:auto; padding:12px 25px; background: #38a169;" onclick="preAprovarMilitar()">✅ Aprovar Acesso</button>
+                        <button class="btn btn-save" style="width:auto; padding:14px 30px; background: #38a169;" onclick="preAprovarMilitar()">✅ Aprovar Acesso</button>
                     </div>
                 </div>
 
                 <table style="max-width: 1000px; margin: 0 auto;">
-                    <thead><tr><th>E-mail Oficial do Utilizador</th><th style="width: 130px; text-align:center;">Status</th><th style="width: 160px; text-align:center;">Nível de Permissão</th><th class="no-print" style="width: 250px; text-align:center;">Controles de Segurança</th></tr></thead>
+                    <thead><tr><th>E-mail Oficial do Utilizador</th><th style="width: 140px; text-align:center;">Status</th><th style="width: 180px; text-align:center;">Nível de Permissão</th><th class="no-print" style="width: 260px; text-align:center;">Controles de Segurança</th></tr></thead>
                     <tbody id="tabelaUsuarios"></tbody>
                 </table>
             </div>
 
             <div id="tela-auditoria" class="screen">
                 <h2><span>📜 Histórico Imutável de Ações (Auditoria)</span></h2>
-                <input type="text" id="buscaAuditoria" placeholder="🔍 Investigar logs por nome, data ou termo..." onkeyup="listarAuditoria()" style="margin-bottom: 20px; width: 100%; max-width: 500px; padding: 14px 20px; border-radius: 25px; border: 2px solid #d69e2e; box-shadow: var(--shadow-soft);">
+                <input type="text" id="buscaAuditoria" placeholder="🔍 Investigar logs por nome, data ou termo..." onkeyup="listarAuditoria()" style="margin-bottom: 25px; width: 100%; max-width: 550px; padding: 16px 25px; border-radius: 30px; border: 2px solid #d69e2e; box-shadow: var(--shadow-soft);">
                 
-                <table style="font-size: 12px;">
-                    <thead><tr><th style="width: 150px;">Data/Hora Log</th><th style="width: 220px;">Assinatura do Autor</th><th style="width: 180px;">Natureza da Ação</th><th>Detalhe Criptografado</th></tr></thead>
+                <table style="font-size: 13px;">
+                    <thead><tr><th style="width: 160px;">Data/Hora Log</th><th style="width: 240px;">Assinatura do Autor</th><th style="width: 200px;">Natureza da Ação</th><th>Detalhe Criptografado</th></tr></thead>
                     <tbody id="tabelaAuditoria"></tbody>
                 </table>
             </div>
@@ -966,14 +965,14 @@
         
         window.listarEfetivo = function() {
             const t = document.getElementById('buscaEfetivo').value.toLowerCase().trim(); const tb = document.getElementById('tabelaEfetivo'); tb.innerHTML = "";
-            if(t.length === 0) { tb.innerHTML = "<tr><td colspan='4' style='text-align:center; padding: 40px; color: #a0aec0;'>Digite o nome ou unidade do policial na barra de pesquisa acima.</td></tr>"; return; }
+            if(t.length === 0) { tb.innerHTML = "<tr><td colspan='4' style='text-align:center; padding: 50px; color: #a0aec0;'>Digite o nome ou unidade do policial na barra de pesquisa acima.</td></tr>"; return; }
             let f = window.getDB().efetivo.filter(p => p.nome.toLowerCase().includes(t) || p.unidade.toLowerCase().includes(t));
-            if(f.length === 0) { tb.innerHTML = "<tr><td colspan='4' style='text-align:center; padding: 40px; color: #e53e3e; font-weight: bold;'>Policial não encontrado na Base.</td></tr>"; return; }
+            if(f.length === 0) { tb.innerHTML = "<tr><td colspan='4' style='text-align:center; padding: 50px; color: #e53e3e; font-weight: bold;'>Policial não encontrado na Base.</td></tr>"; return; }
             f.forEach(p => {
                 let podeEditar = window.postoAtivo && window.postoAtivo !== "Aguardando Aprovação"; // Todos os logados podem editar
                 let btnEdit = podeEditar ? `<button class="btn btn-edit hide-leitura" onclick="prepararEdicaoEfetivo('${p.id}')">✏️ Editar</button>` : '';
                 let btnDel = (window.temAcessoTotal()) ? `<button class="btn btn-del only-admin" onclick="excluirItem('efetivo', '${p.id}')">🗑️</button>` : '';
-                tb.innerHTML += `<tr><td><strong>${window.eH(p.nome)}</strong></td><td><span style="background: #edf2f7; padding: 4px 8px; border-radius: 4px; font-size: 11px; color: #4a5568; border: 1px solid #cbd5e1;">${window.eH(p.unidade)}</span></td><td class="mono-font">${window.eH(p.tel||'-')}</td><td class="no-print">${btnEdit} ${btnDel}</td></tr>`;
+                tb.innerHTML += `<tr><td><strong>${window.eH(p.nome)}</strong></td><td><span style="background: #edf2f7; padding: 6px 12px; border-radius: 6px; font-size: 12px; color: #4a5568; border: 1px solid #cbd5e1; font-weight:600;">${window.eH(p.unidade)}</span></td><td class="mono-font">${window.eH(p.tel||'-')}</td><td class="no-print">${btnEdit} ${btnDel}</td></tr>`;
             });
         }
         window.prepararEdicaoEfetivo = function(id) {
@@ -1039,29 +1038,29 @@
             if(sup.length > 0) { 
                 contSup.innerHTML = `<h3 class="secao-titulo">👑 Oficiais e Supervisão</h3>`; 
                 sup.forEach(s => { 
-                    let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<span style="font-size:8px; background:#fff; color:#4a5568; padding:3px 6px; border-radius:12px; margin-top:5px; display:inline-block; border: 1px solid #cbd5e1; font-weight:bold;">📍 Lançado por: ${window.eH(s.criadoPor || 'Legado')}</span>` : '';
+                    let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<span style="font-size:9px; background:#fff; color:#4a5568; padding:4px 8px; border-radius:12px; margin-top:8px; display:inline-block; border: 1px solid #cbd5e1; font-weight:700;">📍 Lançado por: ${window.eH(s.criadoPor || 'Legado')}</span>` : '';
                     
                     // Chefia tem permissão para editar Mapa
                     let podeEditar = (window.temAcessoTotal() || window.postoAtivo === 'Chefia' || s.criadoPor === window.postoAtivo || s.criadoPor === window.currentUserEmail);
-                    let btnEdit = podeEditar ? `<button class="btn-edit no-print hide-leitura" onclick="prepararEdicaoMapa('${s.id}')" style="margin-top:8px; margin-right:5px; display:inline-block; float:right; padding: 4px 8px; border-radius:4px;">✏️</button>` : '';
-                    let btnDel = podeEditar ? `<button class="btn-del no-print hide-leitura" onclick="excluirItem('mapaForca', '${s.id}')" style="margin-top:8px; display:block; float:right; border-radius:4px;">🗑️</button>` : '';
+                    let btnEdit = podeEditar ? `<button class="btn-edit no-print hide-leitura" onclick="prepararEdicaoMapa('${s.id}')" style="margin-top:10px; margin-right:8px; display:inline-block; float:right; padding: 6px 12px; border-radius:6px;">✏️</button>` : '';
+                    let btnDel = podeEditar ? `<button class="btn-del no-print hide-leitura" onclick="excluirItem('mapaForca', '${s.id}')" style="margin-top:10px; display:block; float:right; border-radius:6px;">🗑️</button>` : '';
                     
-                    contSup.innerHTML += `<div class="card-sup"><div><span class="funcao">${window.eH(s.funcao)}</span><span class="nome">${window.eH(s.nome)}</span>${bUser}</div><div style="text-align:right"><span style="font-size:12px; display:block; font-weight:bold; background:rgba(0,0,0,0.2); padding:3px 8px; border-radius:4px; margin-bottom:5px;">${window.eH(s.unidade)}</span><span class="mono-font" style="font-size:13px; color:#fbd38d;">${window.eH(s.tel||'')}</span><div style="clear:both;">${btnDel}${btnEdit}</div></div></div>`; 
+                    contSup.innerHTML += `<div class="card-sup"><div><span class="funcao">${window.eH(s.funcao)}</span><span class="nome">${window.eH(s.nome)}</span>${bUser}</div><div style="text-align:right"><span style="font-size:13px; display:block; font-weight:700; background:rgba(0,0,0,0.2); padding:4px 10px; border-radius:6px; margin-bottom:8px;">${window.eH(s.unidade)}</span><span class="mono-font" style="font-size:14px; color:#fbd38d;">${window.eH(s.tel||'')}</span><div style="clear:both;">${btnDel}${btnEdit}</div></div></div>`; 
                 }); 
             }
             if(op.length > 0) {
-                contBpm.innerHTML = `<h3 class="secao-titulo" style="margin-top: 25px;">🚓 Efetivo de Patrulha (CGP/CFP)</h3>`;
+                contBpm.innerHTML = `<h3 class="secao-titulo" style="margin-top: 30px;">🚓 Efetivo de Patrulha (CGP/CFP)</h3>`;
                 [...new Set(op.map(r => r.unidade))].sort().forEach(unid => {
                     let html = `<div class="bloco-bpm"><div class="header-bpm">Batalhão Responsável: ${window.eH(unid)}</div>`;
                     let mil = op.filter(r => r.unidade === unid).sort((a,b)=>{if(a.funcao==="CFP"&&b.funcao!=="CFP")return -1;if(b.funcao==="CFP"&&a.funcao!=="CFP")return 1;return a.cia.localeCompare(b.cia);});
                     mil.forEach(m => { 
-                        let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<div style="font-size:9px; color:#a0aec0; margin-top:3px; font-weight:bold;">📍 Lançado via ${window.eH(m.criadoPor || 'Sistema Legado')}</div>` : '';
+                        let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<div style="font-size:10px; color:#a0aec0; margin-top:4px; font-weight:700;">📍 Lançado via ${window.eH(m.criadoPor || 'Sistema Legado')}</div>` : '';
                         
                         let podeEditar = (window.temAcessoTotal() || window.postoAtivo === 'Chefia' || m.criadoPor === window.postoAtivo || m.criadoPor === window.currentUserEmail);
-                        let btnEdit = podeEditar ? `<button class="btn-edit hide-leitura" onclick="prepararEdicaoMapa('${m.id}')">✏️ Edit</button> ` : '';
-                        let btnDel = podeEditar ? `<button class="btn-del hide-leitura" onclick="excluirItem('mapaForca', '${m.id}')">🗑️ Del</button>` : '';
+                        let btnEdit = podeEditar ? `<button class="btn-edit hide-leitura" style="border-radius:6px;" onclick="prepararEdicaoMapa('${m.id}')">✏️ Edit</button> ` : '';
+                        let btnDel = podeEditar ? `<button class="btn-del hide-leitura" style="border-radius:6px;" onclick="excluirItem('mapaForca', '${m.id}')">🗑️ Del</button>` : '';
                         
-                        html += `<div class="linha-militar ${m.funcao==='CFP'?'cfp':'cgp'}"><div class="info-funcao"><span class="badge ${m.funcao==='CFP'?'badge-cfp':'badge-cgp'}">${window.eH(m.funcao)}</span></div><div class="info-nome" style="font-size:14px;">${window.eH(m.nome)}${bUser}</div><div class="info-cia"><span style="background:#edf2f7; padding:3px 6px; border-radius:4px; border:1px solid #cbd5e1;">${window.eH(m.cia)}</span></div><div class="info-tel mono-font" style="font-size:14px;">${window.eH(m.tel||'-')}</div><div class="no-print" style="min-width: 100px; text-align:right;">${btnEdit}${btnDel}</div></div>`; 
+                        html += `<div class="linha-militar ${m.funcao==='CFP'?'cfp':'cgp'}"><div class="info-funcao"><span class="badge ${m.funcao==='CFP'?'badge-cfp':'badge-cgp'}">${window.eH(m.funcao)}</span></div><div class="info-nome" style="font-size:15px;">${window.eH(m.nome)}${bUser}</div><div class="info-cia"><span style="background:#edf2f7; padding:4px 8px; border-radius:6px; border:1px solid #cbd5e1; font-weight:600;">${window.eH(m.cia)}</span></div><div class="info-tel mono-font" style="font-size:15px;">${window.eH(m.tel||'-')}</div><div class="no-print" style="min-width: 120px; text-align:right;">${btnEdit}${btnDel}</div></div>`; 
                     });
                     contBpm.innerHTML += html + `</div>`;
                 });
@@ -1071,18 +1070,18 @@
         window.buscarNoArquivoOcorrencia = async function() {
             const termo = document.getElementById('buscaServidorTalao').value.toLowerCase().trim();
             const resDiv = document.getElementById('resultadoArquivo');
-            if(!termo) return resDiv.innerHTML = "<div style='background:#fff5f5; color:#c53030; padding:10px; border-radius:4px; font-weight:bold; border-left:4px solid #e53e3e;'>⚠️ Aviso Operacional: O campo de busca está vazio. Digite um talão para continuar.</div>";
-            resDiv.innerHTML = "<div style='background:#ebf8ff; color:#2b6cb0; padding:10px; border-radius:4px; font-weight:bold;'><em>⏳ Vasculhando os arquivos confidenciais do servidor...</em></div>";
+            if(!termo) return resDiv.innerHTML = "<div style='background:#fff5f5; color:#c53030; padding:15px; border-radius:8px; font-weight:700; border-left:5px solid #e53e3e;'>⚠️ Aviso Operacional: O campo de busca está vazio. Digite um talão para continuar.</div>";
+            resDiv.innerHTML = "<div style='background:#ebf8ff; color:#2b6cb0; padding:15px; border-radius:8px; font-weight:700;'><em>⏳ Vasculhando os arquivos confidenciais do servidor...</em></div>";
             try {
                 const snap = await getDocs(collection(dbFS, "ocorrencias"));
                 let resultados = [];
                 snap.forEach(d => { let o = d.data(); if ((o.talao && o.talao.toLowerCase().includes(termo)) || (o.bpm && o.bpm.toLowerCase().includes(termo)) || (o.historico && o.historico.toLowerCase().includes(termo))) { resultados.push(o); } });
-                if(resultados.length === 0) return resDiv.innerHTML = "<div style='background:#f8fafc; color:#718096; padding:10px; border-radius:4px;'>Nenhuma ocorrência encontrada correspondente aos dados inseridos.</div>";
+                if(resultados.length === 0) return resDiv.innerHTML = "<div style='background:#f8fafc; color:#718096; padding:15px; border-radius:8px; border:1px solid #e2e8f0;'>Nenhuma ocorrência encontrada correspondente aos dados inseridos.</div>";
                 resultados.sort((a,b) => String(b.id).localeCompare(String(a.id)));
-                let html = `<div style="background:#f0fdf4; color:#166534; padding:10px; border-radius:4px; font-weight:bold; margin-bottom:15px; border:1px solid #bbf7d0;">✅ Pesquisa Concluída: ${resultados.length} ocorrências localizadas nos arquivos.</div>`;
-                resultados.forEach(o => { html += `<div style="background:#fff; padding:20px; border-left:4px solid #3182ce; margin-bottom:15px; border-radius:6px; box-shadow:var(--shadow-soft); border-top:1px solid #e2e8f0; border-right:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0;"><div style="font-size:12px; color:#718096; border-bottom: 2px solid #edf2f7; padding-bottom:8px;"><strong>📅 Ocorrido em:</strong> ${window.eH(o.data)} &nbsp;&nbsp;|&nbsp;&nbsp; <strong>🚓 Unidade:</strong> ${window.eH(o.bpm)} &nbsp;&nbsp;|&nbsp;&nbsp; <strong>📜 Tálão Oficial:</strong> <span class="mono-font" style="color:#2d3748; background:#edf2f7; padding:2px 6px; border-radius:4px;">${window.eH(o.talao)}</span></div><div style="white-space:pre-wrap; font-size:14px; margin-top:12px; line-height:1.5; color:#2d3748;">${window.eH(o.historico)}</div></div>`; });
+                let html = `<div style="background:#f0fdf4; color:#166534; padding:15px; border-radius:8px; font-weight:700; margin-bottom:20px; border:1px solid #bbf7d0;">✅ Pesquisa Concluída: ${resultados.length} ocorrências localizadas nos arquivos.</div>`;
+                resultados.forEach(o => { html += `<div style="background:#fff; padding:25px; border-left:5px solid #3182ce; margin-bottom:20px; border-radius:12px; box-shadow:var(--shadow-soft); border-top:1px solid #e2e8f0; border-right:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0;"><div style="font-size:13px; color:#718096; border-bottom: 2px solid #edf2f7; padding-bottom:12px;"><strong>📅 Ocorrido em:</strong> ${window.eH(o.data)} &nbsp;&nbsp;|&nbsp;&nbsp; <strong>🚓 Unidade:</strong> ${window.eH(o.bpm)} &nbsp;&nbsp;|&nbsp;&nbsp; <strong>📜 Tálão Oficial:</strong> <span class="mono-font" style="color:#2d3748; background:#edf2f7; padding:4px 8px; border-radius:6px;">${window.eH(o.talao)}</span></div><div style="white-space:pre-wrap; font-size:15px; margin-top:15px; line-height:1.6; color:#2d3748;">${window.eH(o.historico)}</div></div>`; });
                 resDiv.innerHTML = html;
-            } catch(e) { resDiv.innerHTML = "<div style='background:#fff5f5; color:#c53030; padding:10px; border-radius:4px; font-weight:bold;'>Falha na comunicação cifrada com o servidor principal. Tente novamente mais tarde.</div>"; }
+            } catch(e) { resDiv.innerHTML = "<div style='background:#fff5f5; color:#c53030; padding:15px; border-radius:8px; font-weight:700;'>Falha na comunicação cifrada com o servidor principal. Tente novamente mais tarde.</div>"; }
         }
 
         // CHEFIA AGORA VOLTA A PODER GRAVAR OCORRÊNCIA
@@ -1122,16 +1121,16 @@
             
             if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') f = f.filter(o => o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
             if(t.length > 0) { f = f.filter(o=>o.data.includes(t)||o.bpm.toLowerCase().includes(t)||o.talao.toLowerCase().includes(t)||(o.historico&&o.historico.toLowerCase().includes(t))); }
-            if(f.length===0){tb.innerHTML="<tr><td colspan='5' style='text-align:center; padding:30px; font-weight:bold; color:#e53e3e;'>A placa de rede não localizou ocorrências no período selecionado.</td></tr>";return;} 
+            if(f.length===0){tb.innerHTML="<tr><td colspan='5' style='text-align:center; padding:40px; font-weight:700; color:#e53e3e;'>A placa de rede não localizou ocorrências no período selecionado.</td></tr>";return;} 
             
             f.sort((a,b) => String(b.id).localeCompare(String(a.id))).forEach(o=>{
                 let podeEditar = (window.temAcessoTotal() || window.postoAtivo === 'Chefia' || o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
-                let btnEdit = podeEditar ? `<button class="btn btn-edit no-print hide-leitura" onclick="prepararEdicaoOcorrencia('${o.id}')" style="padding: 8px 12px; border-radius: 4px;">✏️ Editar</button>` : '';
-                let btnPdf = podeEditar ? `<button class="btn btn-save no-print" style="background:#2b6cb0; padding:8px 12px; font-size:11px; border-radius: 4px;" onclick="baixarOcorrenciaInd('${o.id}')">🖨️ Extrato PDF</button>` : '';
-                let btnDel = podeEditar ? `<button class="btn btn-del hide-leitura" onclick="excluirItem('ocorrencias', '${o.id}')" style="padding: 8px 12px; border-radius: 4px;">🗑️ Anular</button>` : '';
-                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') && o.criadoPor ? `<div style="font-size:10px; color:#4a5568; background: #e2e8f0; padding:2px 6px; border-radius:12px; margin-top:5px; font-weight:bold; display:inline-block; border: 1px solid #cbd5e1;">📍 Posto: ${window.eH(o.criadoPor)}</div>` : '';
+                let btnEdit = podeEditar ? `<button class="btn btn-edit no-print hide-leitura" onclick="prepararEdicaoOcorrencia('${o.id}')" style="padding: 10px 14px; border-radius: 6px;">✏️ Editar</button>` : '';
+                let btnPdf = podeEditar ? `<button class="btn btn-save no-print" style="background:#2b6cb0; padding:10px 14px; font-size:12px; border-radius: 6px;" onclick="baixarOcorrenciaInd('${o.id}')">🖨️ Extrato PDF</button>` : '';
+                let btnDel = podeEditar ? `<button class="btn btn-del hide-leitura" onclick="excluirItem('ocorrencias', '${o.id}')" style="padding: 10px 14px; border-radius: 6px;">🗑️ Anular</button>` : '';
+                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') && o.criadoPor ? `<div style="font-size:11px; color:#4a5568; background: #e2e8f0; padding:4px 8px; border-radius:12px; margin-top:8px; font-weight:700; display:inline-block; border: 1px solid #cbd5e1;">📍 Posto: ${window.eH(o.criadoPor)}</div>` : '';
 
-                tb.innerHTML+=`<tr><td class="mono-font" style="font-size:14px; font-weight:bold;">${window.eH(o.data)}</td><td><span style="background:#edf2f7; border: 1px solid #cbd5e1; padding: 5px 8px; border-radius: 4px; font-weight: bold; color: #2d3748;">${window.eH(o.bpm)}</span></td><td class="mono-font" style="font-size:14px;">${window.eH(o.talao)}<br>${bUser}</td><td><button class="btn btn-edit no-print" id="btn-hist-${o.id}" style="background:#718096; padding:6px 12px; border-radius:4px; transition: all 0.2s;" onclick="toggleHistorico('${o.id}')">👁️ Ler Relatório</button><div id="full-${o.id}" style="display:none; white-space:pre-wrap; background:#fffaf0; padding:15px; margin-top:10px; border-left:4px solid #d69e2e; border-radius:0 8px 8px 0; color:#2d3748; line-height: 1.5; font-size:14px; box-shadow: var(--shadow-soft);">${window.eH(o.historico)}</div></td><td class="no-print"><div style="display:flex; flex-direction:column; gap:6px;">${btnEdit} ${btnPdf} ${btnDel}</div></td></tr>`;
+                tb.innerHTML+=`<tr><td class="mono-font" style="font-size:15px; font-weight:700;">${window.eH(o.data)}</td><td><span style="background:#edf2f7; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 6px; font-weight: 700; color: #2d3748;">${window.eH(o.bpm)}</span></td><td class="mono-font" style="font-size:15px;">${window.eH(o.talao)}<br>${bUser}</td><td><button class="btn btn-edit no-print" id="btn-hist-${o.id}" style="background:#718096; padding:8px 14px; border-radius:6px; transition: all 0.2s;" onclick="toggleHistorico('${o.id}')">👁️ Ler Relatório</button><div id="full-${o.id}" style="display:none; white-space:pre-wrap; background:#fffaf0; padding:20px; margin-top:15px; border-left:5px solid #d69e2e; border-radius:0 12px 12px 0; color:#2d3748; line-height: 1.6; font-size:15px; box-shadow: var(--shadow-soft);">${window.eH(o.historico)}</div></td><td class="no-print"><div style="display:flex; flex-direction:column; gap:8px;">${btnEdit} ${btnPdf} ${btnDel}</div></td></tr>`;
             }); 
         }
         window.toggleHistorico = function(id) { let f=document.getElementById('full-'+id); let b=document.getElementById('btn-hist-'+id); if(f.style.display==='none'){f.style.display='block';b.innerHTML='🙈 Ocultar Leitura'; b.style.background="#4a5568";}else{f.style.display='none';b.innerHTML='👁️ Ler Relatório'; b.style.background="#718096";} }
@@ -1164,17 +1163,17 @@
             if(!window.temAcessoTotal()) guinchosGeral = guinchosGeral.filter(g => g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
             
             let f = t.length === 0 ? guinchosGeral : guinchosGeral.filter(g=>(g.dataShow&&g.dataShow.toLowerCase().includes(t))||(g.motNome&&g.motNome.toLowerCase().includes(t))||(g.placa&&g.placa.toLowerCase().includes(t))||(g.bpm&&g.bpm.toLowerCase().includes(t))||(g.talao&&g.talao.toLowerCase().includes(t)));
-            if(f.length===0){tb.innerHTML="<tr><td colspan='8' style='text-align:center; padding:30px; font-weight:bold; color:#a0aec0;'>O scanner não localizou acionamentos em aberto para esta mesa.</td></tr>";return;} 
+            if(f.length===0){tb.innerHTML="<tr><td colspan='8' style='text-align:center; padding:40px; font-weight:700; color:#a0aec0;'>O scanner não localizou acionamentos em aberto para esta mesa.</td></tr>";return;} 
             
             f.sort((a,b) => String(b.id).localeCompare(String(a.id))).forEach(g=>{
-                let bUser = (window.temAcessoTotal()) && g.criadoPor ? `<br><span style="font-size:9px; color:#718096; background:#edf2f7; padding:2px 4px; border-radius:4px; border:1px solid #cbd5e1;">👤 ${window.eH(g.criadoPor)}</span>` : '';
+                let bUser = (window.temAcessoTotal()) && g.criadoPor ? `<br><span style="font-size:10px; color:#718096; background:#edf2f7; padding:3px 6px; border-radius:6px; border:1px solid #cbd5e1; display:inline-block; margin-top:5px;">👤 ${window.eH(g.criadoPor)}</span>` : '';
                 let podeEditar = (window.temAcessoTotal() || g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
-                let btnDel = podeEditar ? `<button class="btn btn-del hide-leitura" onclick="excluirItem('guinchos', '${g.id}')" style="border-radius:4px;">🗑️</button>` : '';
+                let btnDel = podeEditar ? `<button class="btn btn-del hide-leitura" onclick="excluirItem('guinchos', '${g.id}')" style="border-radius:6px; padding: 10px 14px;">🗑️</button>` : '';
                 
                 // CRACHÁ DO CPF (AZUL ESCURO)
-                let badgeCpf = g.motCpf ? `<br><span style="font-size:11px; background:#2b6cb0; color:white; padding:3px 8px; border-radius:12px; display:inline-block; margin-top:6px; font-weight:bold; letter-spacing:1px; box-shadow:0 2px 4px rgba(43,108,176,0.3);" class="mono-font">CPF: ${window.eH(g.motCpf)}</span>` : '';
+                let badgeCpf = g.motCpf ? `<br><span style="font-size:12px; background:#2b6cb0; color:white; padding:4px 10px; border-radius:12px; display:inline-block; margin-top:8px; font-weight:700; letter-spacing:1px; box-shadow:0 2px 4px rgba(43,108,176,0.3);" class="mono-font">CPF: ${window.eH(g.motCpf)}</span>` : '';
 
-                tb.innerHTML+=`<tr><td class="mono-font" style="font-size:13px; font-weight:bold;">${window.eH(g.dataShow)}${bUser}</td><td><strong style="font-size:14px; color:#1a202c;">${window.eH(g.motNome)}</strong>${badgeCpf}</td><td><span class="mono-font" style="text-transform: uppercase; background:#f8fafc; border:1px solid #cbd5e1; padding:4px 8px; border-radius:4px;">${window.eH(g.placa)}</span></td><td><strong style="color:#2b6cb0;">${window.eH(g.bpm)}</strong></td><td class="mono-font">${window.eH(g.talao)}</td><td>${window.eH(g.patio)}</td><td class="no-print"><button class="btn hide-leitura ${g.chegou?'btn-status-ok':'btn-status-pend'}" style="width: 100px; padding: 8px; border-radius: 6px; box-shadow: var(--shadow-soft); transition: all 0.2s ease;" onclick="altStatusGuincho('${g.id}')">${g.chegou?'✅ PÁTIO':'🕒 EM ROTA'}</button></td><td class="no-print">${btnDel}</td></tr>`;
+                tb.innerHTML+=`<tr class="${g.chegou?'row-sucesso':'row-atencao'}"><td class="mono-font" style="font-size:14px; font-weight:700;">${window.eH(g.dataShow)}${bUser}</td><td><strong style="font-size:15px; color:#1a202c;">${window.eH(g.motNome)}</strong>${badgeCpf}</td><td><span class="mono-font" style="text-transform: uppercase; background:#f8fafc; border:1px solid #cbd5e1; padding:6px 10px; border-radius:6px;">${window.eH(g.placa)}</span></td><td><strong style="color:#2b6cb0; font-size:15px;">${window.eH(g.bpm)}</strong></td><td class="mono-font" style="font-size:15px;">${window.eH(g.talao)}</td><td>${window.eH(g.patio)}</td><td class="no-print"><button class="btn hide-leitura ${g.chegou?'btn-status-ok':'btn-status-pend'}" style="width: 110px; padding: 10px; border-radius: 8px; box-shadow: var(--shadow-soft); transition: all 0.2s ease;" onclick="altStatusGuincho('${g.id}')">${g.chegou?'✅ PÁTIO':'🕒 EM ROTA'}</button></td><td class="no-print">${btnDel}</td></tr>`;
             }); 
         }
         window.altStatusGuincho = async function(id) { let g = window.getDB().guinchos.find(x => String(x.id) === String(id)); if(g) { g.chegou = !g.chegou; await setDoc(doc(dbFS, "guinchos", String(id)), g); } }
@@ -1222,17 +1221,17 @@
                 return visivelParaOperador && (fB === 'todos' || s.bpm === fB) && (fS === 'todos' || s.status === fS);
             });
 
-            if(f.length===0){ tb.innerHTML="<tr><td colspan='7' style='text-align:center; padding:30px; font-weight:bold; color:#718096;'>O banco de dados não acusou inoperância do SIOPM neste turno.</td></tr>"; window.atualizarDashboard(); return; } 
+            if(f.length===0){ tb.innerHTML="<tr><td colspan='7' style='text-align:center; padding:40px; font-weight:700; color:#718096;'>O banco de dados não acusou inoperância do SIOPM neste turno.</td></tr>"; window.atualizarDashboard(); return; } 
             
             f.sort((a,b) => String(b.id).localeCompare(String(a.id))).forEach(s=>{
-                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<br><span style="font-size:9px; color:#4a5568; background:#edf2f7; padding:2px 6px; border-radius:4px; display:inline-block; margin-top:4px; border:1px solid #cbd5e1;">📍 Posto: ${window.eH(s.criadoPor)}</span>` : '';
+                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<br><span style="font-size:10px; color:#4a5568; background:#edf2f7; padding:4px 8px; border-radius:6px; display:inline-block; margin-top:6px; border:1px solid #cbd5e1; font-weight:700;">📍 Posto: ${window.eH(s.criadoPor)}</span>` : '';
                 
                 let podeEditar = (window.temAcessoTotal() || window.postoAtivo === 'Chefia' || s.criadoPor === window.postoAtivo || s.criadoPor === window.currentUserEmail);
-                let btnHtml = podeEditar ? `<button class="btn-action hide-leitura btn ${s.status==="Aberto"?"btn-save":"btn-print"}" style="padding: 6px 12px; margin-right: 5px; font-size: 11px;" onclick="encerrarOuReabrirSiopm('${s.id}')">${s.status==="Aberto"?"🔓 Dar Baixa":"🔒 Estornar"}</button> <button class="btn-action btn-del hide-leitura" style="padding: 6px 12px;" onclick="excluirItem('siopm', '${s.id}')">🗑️</button>` : '';
+                let btnHtml = podeEditar ? `<button class="btn-action hide-leitura btn ${s.status==="Aberto"?"btn-save":"btn-print"}" style="padding: 10px 14px; margin-right: 8px; font-size: 12px; border-radius:6px;" onclick="encerrarOuReabrirSiopm('${s.id}')">${s.status==="Aberto"?"🔓 Dar Baixa":"🔒 Estornar"}</button> <button class="btn-action btn-del hide-leitura" style="padding: 10px 14px; border-radius:6px;" onclick="excluirItem('siopm', '${s.id}')">🗑️</button>` : '';
                 
-                let desfechoEstilo = s.desfecho ? `color:#166534; font-weight:bold; background:#f0fdf4; padding:4px 8px; border-radius:4px; border:1px solid #86efac; display:inline-block;` : `color:#a0aec0; font-style:italic;`;
+                let desfechoEstilo = s.desfecho ? `color:#166534; font-weight:700; background:#f0fdf4; padding:6px 12px; border-radius:6px; border:1px solid #86efac; display:inline-block; font-size:13px;` : `color:#a0aec0; font-style:italic; font-size:13px;`;
 
-                tb.innerHTML+=`<tr><td class="mono-font" style="font-size:14px; font-weight:bold;">${window.eH(s.data)}${bUser}</td><td><span style="background:#f8fafc; border:1px solid #cbd5e1; padding:4px 8px; border-radius:4px; font-weight:bold; color:#2b6cb0;">${window.eH(s.bpm)}</span></td><td class="mono-font" style="font-size:15px; color:#1a202c;">${window.eH(s.talao)}</td><td><span style="background:#edf2f7; padding:2px 6px; border-radius:12px; font-size:11px; font-weight:bold;">${window.eH(s.periodo)}</span></td><td><span style="${desfechoEstilo}">${window.eH(s.desfecho||'AGUARDANDO FINALIZAÇÃO TÁTICA')}</span></td><td><span class="badge-siopm ${s.status==="Aberto"?"badge-aberto":"badge-encerrado"}" style="box-shadow:var(--shadow-soft); padding:6px 12px;">${window.eH(s.status)}</span></td><td class="no-print">${btnHtml}</td></tr>`;
+                tb.innerHTML+=`<tr class="${s.status==='Aberto'?'row-urgente':'row-sucesso'}"><td class="mono-font" style="font-size:15px; font-weight:700;">${window.eH(s.data)}${bUser}</td><td><span style="background:#f8fafc; border:1px solid #cbd5e1; padding:6px 10px; border-radius:6px; font-weight:700; color:#2b6cb0;">${window.eH(s.bpm)}</span></td><td class="mono-font" style="font-size:16px; color:#1a202c;">${window.eH(s.talao)}</td><td><span style="background:#edf2f7; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:700;">${window.eH(s.periodo)}</span></td><td><span style="${desfechoEstilo}">${window.eH(s.desfecho||'AGUARDANDO FINALIZAÇÃO TÁTICA')}</span></td><td><span class="badge-siopm ${s.status==="Aberto"?"badge-aberto":"badge-encerrado"}" style="box-shadow:var(--shadow-soft); padding:8px 14px; font-size:13px;">${window.eH(s.status)}</span></td><td class="no-print">${btnHtml}</td></tr>`;
             }); 
             window.atualizarDashboard(); 
         }
@@ -1259,14 +1258,14 @@
             emails.forEach(u => {
                 let obj = perfis[u];
                 let hStatus = obj.status === 'pendente' ? '🟡 Fila de Triagem' : obj.status === 'bloqueado' ? '🚫 Cadastro Suspenso' : '✅ Autorizado pelo Comando';
-                let hCargo = u.toLowerCase() === EMAIL_DO_ADMINISTRADOR ? '👑 Proprietário / Master' : `<select onchange="mudarCargo('${window.eH(u)}', this.value)" style="padding: 6px; border-radius: 4px; font-weight: bold;"><option value="admin" ${obj.role==='admin'?'selected':''}>👮 Admin (Total)</option><option value="operador" ${obj.role==='operador'?'selected':''}>✍️ Operador Rádio</option><option value="leitura" ${obj.role==='leitura'?'selected':''}>👁️ Observador Civil</option></select>`;
+                let hCargo = u.toLowerCase() === EMAIL_DO_ADMINISTRADOR ? '👑 Proprietário / Master' : `<select onchange="mudarCargo('${window.eH(u)}', this.value)" style="padding: 8px; border-radius: 6px; font-weight: 700;"><option value="admin" ${obj.role==='admin'?'selected':''}>👮 Admin (Total)</option><option value="operador" ${obj.role==='operador'?'selected':''}>✍️ Operador Rádio</option><option value="leitura" ${obj.role==='leitura'?'selected':''}>👁️ Observador Civil</option></select>`;
                 let bAcao = ''; let bExc = '';
                 if (u.toLowerCase() !== EMAIL_DO_ADMINISTRADOR) {
-                    if (obj.status === 'pendente' || obj.status === 'bloqueado') bAcao = `<button class="btn" style="background:#38a169; padding: 8px 15px;" onclick="aprovarUsuario('${window.eH(u)}')">✅ Ativar Ficha</button>`;
-                    else bAcao = `<button class="btn" style="background:#e53e3e; padding: 8px 15px;" onclick="bloquearUsuario('${window.eH(u)}')">🚫 Desabilitar</button>`;
-                    bExc = `<button class="btn btn-del" style="padding: 8px 15px;" onclick="excluirUsuario('${window.eH(u)}')">🗑️ Apagar</button>`;
+                    if (obj.status === 'pendente' || obj.status === 'bloqueado') bAcao = `<button class="btn" style="background:#38a169; padding: 10px 18px;" onclick="aprovarUsuario('${window.eH(u)}')">✅ Ativar Ficha</button>`;
+                    else bAcao = `<button class="btn" style="background:#e53e3e; padding: 10px 18px;" onclick="bloquearUsuario('${window.eH(u)}')">🚫 Desabilitar</button>`;
+                    bExc = `<button class="btn btn-del" style="padding: 10px 18px;" onclick="excluirUsuario('${window.eH(u)}')">🗑️ Apagar</button>`;
                 }
-                tb.innerHTML += `<tr><td style="font-size:14px;"><strong>${window.eH(u)}</strong><br><span style="font-size:10px; color: #718096; font-weight: bold;">Último acesso gravado no satélite: ${window.eH(obj.lastSeen || '-')}</span></td><td><span style="background:#f8fafc; padding:4px 8px; border-radius:4px; border:1px solid #cbd5e1; font-weight:bold; font-size:12px;">${hStatus}</span></td><td>${hCargo}</td><td><div style="display:flex; gap:5px;">${bAcao} ${bExc}</div></td></tr>`;
+                tb.innerHTML += `<tr><td style="font-size:15px;"><strong>${window.eH(u)}</strong><br><span style="font-size:11px; color: #718096; font-weight: 700;">Último acesso gravado no satélite: ${window.eH(obj.lastSeen || '-')}</span></td><td><span style="background:#f8fafc; padding:6px 12px; border-radius:6px; border:1px solid #cbd5e1; font-weight:700; font-size:13px;">${hStatus}</span></td><td>${hCargo}</td><td><div style="display:flex; gap:8px;">${bAcao} ${bExc}</div></td></tr>`;
             });
         }
 
@@ -1282,8 +1281,8 @@
             const t = document.getElementById('buscaAuditoria').value.toLowerCase().trim(); const tb = document.getElementById('tabelaAuditoria'); tb.innerHTML = "";
             let log = window.getDB().auditoria || [];
             if(t.length > 0) log = log.filter(l => l.user.toLowerCase().includes(t) || l.acao.toLowerCase().includes(t) || l.detalhe.toLowerCase().includes(t));
-            if(log.length === 0) return tb.innerHTML = "<tr><td colspan='4' style='text-align:center; padding: 40px; font-weight: bold; color: #a0aec0;'>Nenhuma alteração de segurança imutável foi catalogada até então.</td></tr>"; 
-            log.forEach(l => { tb.innerHTML += `<tr><td class="mono-font" style="font-weight: bold; color:#2b6cb0;">${window.eH(l.data)}</td><td><strong style="color: #1a202c; font-size:13px;">${window.eH(l.user)}</strong></td><td><span style="background: #edf2f7; padding: 4px 8px; border-radius: 4px; font-weight: bold; border: 1px solid #cbd5e1; font-size:12px;">${window.eH(l.acao)}</span></td><td style="font-style: italic; color:#4a5568;">${window.eH(l.detalhe)}</td></tr>`; });
+            if(log.length === 0) return tb.innerHTML = "<tr><td colspan='4' style='text-align:center; padding: 50px; font-weight: 700; color: #a0aec0;'>Nenhuma alteração de segurança imutável foi catalogada até então.</td></tr>"; 
+            log.forEach(l => { tb.innerHTML += `<tr><td class="mono-font" style="font-weight: 700; color:#2b6cb0; font-size:14px;">${window.eH(l.data)}</td><td><strong style="color: #1a202c; font-size:14px;">${window.eH(l.user)}</strong></td><td><span style="background: #edf2f7; padding: 6px 10px; border-radius: 6px; font-weight: 700; border: 1px solid #cbd5e1; font-size:13px;">${window.eH(l.acao)}</span></td><td style="font-style: italic; color:#4a5568; font-size:14px;">${window.eH(l.detalhe)}</td></tr>`; });
         }
 
         // BACKUP GERAL PROFUNDO
