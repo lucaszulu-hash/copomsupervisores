@@ -119,10 +119,10 @@
         .badge-cgp { background: var(--cgp-bg); color: var(--cgp-text); border: 1px solid #86efac;}
         .info-funcao { width: 60px; } .info-nome { flex-grow: 1; font-weight: bold; } .info-cia { width: 80px; text-align: center; } .info-tel { width: 130px; color: #718096; }
 
-        /* CONTROLES DE HIERARQUIA E TELAS */
+        /* CONTROLE DE VISIBILIDADE HIERÁRQUICA */
         #printIndividual, #printRelatorioGeral { display: none; }
-        .only-admin, .only-master { display: none; }
         
+        .only-admin, .only-master { display: none; }
         body.is-master .only-master { display: block !important; }
         body.role-admin .only-admin { display: block !important; }
         body.role-leitura .hide-leitura { display: none !important; }
@@ -131,11 +131,8 @@
         body.status-pendente .menu-items button:not(:first-child):not(.btn-logout) { display: none !important; }
         body.status-pendente #box-relatorio-dashboard { display: none !important; }
 
-        /* TÁTICA DA CHEFIA (OVERWATCH) */
+        /* TÁTICA DA CHEFIA (OVERWATCH) - Apenas oculta o menu de Guinchos */
         body.is-chefia #btn-menu-guinchos { display: none !important; }
-        body.is-chefia #tela-mapa .form-section,
-        body.is-chefia #tela-ocorrencias .form-section,
-        body.is-chefia #tela-siopm .form-section { display: none !important; }
 
         @media print {
             .sidebar, .form-section, #buscaEfetivo, #buscaOcorrencia, #buscaGuincho, .filtros-siopm, details, .no-print, .menu-items { display: none !important; }
@@ -443,7 +440,7 @@
                 </table>
             </div>
 
-            <div id="tela-usuarios" class="screen only-master">
+            <div id="tela-usuarios" class="screen">
                 <h2><span>🛡️ Gestão de Perfis (Acesso Master)</span></h2>
                 
                 <div style="background:#f8fafc; padding:20px; border-left:5px solid #d69e2e; margin-bottom:25px; border-radius:4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
@@ -465,7 +462,7 @@
                 </table>
             </div>
 
-            <div id="tela-auditoria" class="screen only-admin">
+            <div id="tela-auditoria" class="screen">
                 <h2><span>📜 Histórico de Ações (Auditoria)</span></h2>
                 <input type="text" id="buscaAuditoria" placeholder="🔍 Pesquisar no histórico..." onkeyup="listarAuditoria()" style="margin-bottom: 15px; width: 100%; max-width: 500px; padding: 12px; border-radius: 20px; border: 2px solid #d69e2e;">
                 <table style="font-size: 12px;">
@@ -678,7 +675,6 @@
             document.getElementById('infoFuncaoAtiva').innerText = window.postoAtivo;
             window.registrarAuditoria('Assumiu Turno', `Mesa: ${window.postoAtivo}`);
             
-            // ATIVA A LÓGICA DE OVERWATCH SE FOR A CHEFIA
             if (window.postoAtivo === 'Chefia') {
                 document.body.classList.add('is-chefia');
             } else {
@@ -775,7 +771,7 @@
             let oco = db.ocorrencias.filter(x => dTs.includes(x.data)); 
             let sio = db.siopm.filter(x => dTs.includes(x.data));
 
-            if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') {
+            if(!window.temAcessoTotal()) {
                 mOn = mOn.filter(x => x.criadoPor === window.postoAtivo || x.criadoPor === window.currentUserEmail);
                 mHj = mHj.filter(x => x.criadoPor === window.postoAtivo || x.criadoPor === window.currentUserEmail);
                 guinchosTurno = guinchosTurno.filter(g => g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
@@ -841,16 +837,16 @@
             document.getElementById('dashEfetivo').innerText = db.efetivo.length; 
             
             let ocoDash = db.ocorrencias;
-            if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') ocoDash = ocoDash.filter(o => o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
+            if(!window.temAcessoTotal()) ocoDash = ocoDash.filter(o => o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
             document.getElementById('dashOcorrencias').innerText = ocoDash.filter(o => vs.includes(o.data)).length; 
 
             let guinchosDash = db.guinchos;
-            if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') guinchosDash = guinchosDash.filter(g => g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
+            if(!window.temAcessoTotal()) guinchosDash = guinchosDash.filter(g => g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
             document.getElementById('dashGuinchos').innerText = guinchosDash.filter(g => g.dataShow && vs.includes(g.dataShow.split(' ')[0])).length;
         }
 
         window.atualizarFiltroAdminMapa = function() {
-            if(window.temAcessoTotal() || window.postoAtivo === 'Chefia') {
+            if(window.temAcessoTotal()) {
                 const sel = document.getElementById('filtroAdminUsuarioMapa');
                 sel.style.display = 'inline-block'; const atual = sel.value;
                 let html = `<option value="todos">👑 Admin / Chefia: Todos os Postos</option>`;
@@ -950,7 +946,7 @@
             const dt = document.getElementById('dataMapa').value; const contSup = document.getElementById('containerSupervisao'); const contBpm = document.getElementById('containerBatalhoes'); contSup.innerHTML = ""; contBpm.innerHTML = ""; 
             let dia = window.getDB().mapaForca.filter(r => r.data === dt);
             
-            if (!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') dia = dia.filter(r => r.criadoPor === window.postoAtivo || r.criadoPor === window.currentUserEmail);
+            if (!window.temAcessoTotal()) dia = dia.filter(r => r.criadoPor === window.postoAtivo || r.criadoPor === window.currentUserEmail);
             else { 
                 const selUser = document.getElementById('filtroAdminUsuarioMapa').value; 
                 if(selUser !== 'todos') dia = dia.filter(r => r.criadoPor === selUser); 
@@ -960,10 +956,13 @@
             if(sup.length > 0) { 
                 contSup.innerHTML = `<h3 class="secao-titulo">👑 Supervisão do Turno</h3>`; 
                 sup.forEach(s => { 
-                    let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<span style="font-size:9px; background:#edf2f7; color:#4a5568; padding:2px 4px; border-radius:4px; margin-top:4px; display:inline-block;">👤 ${window.eH(s.criadoPor || 'Legado')}</span>` : '';
-                    let podeEditar = window.postoAtivo !== 'Chefia' && (window.temAcessoTotal() || s.criadoPor === window.postoAtivo || s.criadoPor === window.currentUserEmail);
+                    let bUser = window.temAcessoTotal() ? `<span style="font-size:9px; background:#edf2f7; color:#4a5568; padding:2px 4px; border-radius:4px; margin-top:4px; display:inline-block;">👤 ${window.eH(s.criadoPor || 'Legado')}</span>` : '';
+                    
+                    // A Chefia e Admins têm poder total de edição aqui
+                    let podeEditar = (window.temAcessoTotal() || s.criadoPor === window.postoAtivo || s.criadoPor === window.currentUserEmail);
                     let btnEdit = podeEditar ? `<button class="btn-edit no-print hide-leitura" onclick="prepararEdicaoMapa('${s.id}')" style="margin-top:5px; margin-right:5px; display:inline-block; float:right; padding: 2px 5px;">✏️</button>` : '';
                     let btnDel = podeEditar ? `<button class="btn-del no-print hide-leitura" onclick="excluirItem('mapaForca', '${s.id}')" style="margin-top:5px; display:block; float:right;">🗑️</button>` : '';
+                    
                     contSup.innerHTML += `<div class="card-sup"><div><span class="funcao">${window.eH(s.funcao)}</span><span class="nome">${window.eH(s.nome)}</span>${bUser}</div><div style="text-align:right"><span style="font-size:11px; display:block">${window.eH(s.unidade)}</span><span class="mono-font" style="font-size:12px; color:#edf2f7;">${window.eH(s.tel||'')}</span>${btnDel}${btnEdit}</div></div>`; 
                 }); 
             }
@@ -973,10 +972,12 @@
                     let html = `<div class="bloco-bpm"><div class="header-bpm">${window.eH(unid)}</div>`;
                     let mil = op.filter(r => r.unidade === unid).sort((a,b)=>{if(a.funcao==="CFP"&&b.funcao!=="CFP")return -1;if(b.funcao==="CFP"&&a.funcao!=="CFP")return 1;return a.cia.localeCompare(b.cia);});
                     mil.forEach(m => { 
-                        let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<div style="font-size:8px; color:#a0aec0; margin-top:2px;">👤 ${window.eH(m.criadoPor || 'Legado')}</div>` : '';
-                        let podeEditar = window.postoAtivo !== 'Chefia' && (window.temAcessoTotal() || m.criadoPor === window.postoAtivo || m.criadoPor === window.currentUserEmail);
+                        let bUser = window.temAcessoTotal() ? `<div style="font-size:8px; color:#a0aec0; margin-top:2px;">👤 ${window.eH(m.criadoPor || 'Legado')}</div>` : '';
+                        
+                        let podeEditar = (window.temAcessoTotal() || m.criadoPor === window.postoAtivo || m.criadoPor === window.currentUserEmail);
                         let btnEdit = podeEditar ? `<button class="btn-edit hide-leitura" onclick="prepararEdicaoMapa('${m.id}')">✏️</button> ` : '';
                         let btnDel = podeEditar ? `<button class="btn-del hide-leitura" onclick="excluirItem('mapaForca', '${m.id}')">🗑️</button>` : '';
+                        
                         html += `<div class="linha-militar ${m.funcao==='CFP'?'cfp':'cgp'}"><div class="info-funcao"><span class="badge ${m.funcao==='CFP'?'badge-cfp':'badge-cgp'}">${window.eH(m.funcao)}</span></div><div class="info-nome">${window.eH(m.nome)}${bUser}</div><div class="info-cia">${window.eH(m.cia)}</div><div class="info-tel mono-font">${window.eH(m.tel||'-')}</div><div class="no-print" style="min-width: 60px;">${btnEdit}${btnDel}</div></div>`; 
                     });
                     contBpm.innerHTML += html + `</div>`;
@@ -1034,16 +1035,16 @@
             const t=document.getElementById('buscaOcorrencia').value.toLowerCase().trim(); const tb=document.getElementById('tabelaOcorrencias'); tb.innerHTML=""; 
             let f = window.getDB().ocorrencias;
             
-            if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') f = f.filter(o => o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
+            if(!window.temAcessoTotal()) f = f.filter(o => o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
             if(t.length > 0) { f = f.filter(o=>o.data.includes(t)||o.bpm.toLowerCase().includes(t)||o.talao.toLowerCase().includes(t)||(o.historico&&o.historico.toLowerCase().includes(t))); }
             if(f.length===0){tb.innerHTML="<tr><td colspan='5' style='text-align:center;'>Nenhuma ocorrência.</td></tr>";return;} 
             
             f.sort((a,b) => String(b.id).localeCompare(String(a.id))).forEach(o=>{
-                let podeEditar = window.postoAtivo !== 'Chefia' && (window.temAcessoTotal() || o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
+                let podeEditar = (window.temAcessoTotal() || o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
                 let btnEdit = podeEditar ? `<button class="btn btn-edit no-print hide-leitura" onclick="prepararEdicaoOcorrencia('${o.id}')">✏️</button>` : '';
                 let btnPdf = podeEditar ? `<button class="btn btn-save no-print" style="background:#3182ce; padding:6px; font-size:11px;" onclick="baixarOcorrenciaInd('${o.id}')">🖨️ PDF</button>` : '';
                 let btnDel = podeEditar ? `<button class="btn btn-del hide-leitura" onclick="excluirItem('ocorrencias', '${o.id}')">🗑️</button>` : '';
-                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') && o.criadoPor ? `<div style="font-size:9px; color:#a0aec0;">👤 ${window.eH(o.criadoPor)}</div>` : '';
+                let bUser = window.temAcessoTotal() && o.criadoPor ? `<div style="font-size:9px; color:#a0aec0;">👤 ${window.eH(o.criadoPor)}</div>` : '';
 
                 tb.innerHTML+=`<tr><td class="mono-font">${window.eH(o.data)}</td><td><strong>${window.eH(o.bpm)}</strong></td><td class="mono-font">${window.eH(o.talao)}${bUser}</td><td><button class="btn btn-edit no-print" id="btn-hist-${o.id}" style="background:#718096; padding:6px;" onclick="toggleHistorico('${o.id}')">👁️ Exibir</button><div id="full-${o.id}" style="display:none; white-space:pre-wrap; background:#fffaf0; padding:10px; margin-top:5px;">${window.eH(o.historico)}</div></td><td class="no-print">${btnEdit} ${btnPdf} ${btnDel}</td></tr>`;
             }); 
@@ -1070,22 +1071,22 @@
         window.listarGuinchos = function() { 
             const t=document.getElementById('buscaGuincho').value.toLowerCase().trim(); const tb=document.getElementById('tabelaGuinchos'); tb.innerHTML=""; 
             let guinchosGeral = window.getDB().guinchos; 
-            if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') guinchosGeral = guinchosGeral.filter(g => g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
+            if(!window.temAcessoTotal()) guinchosGeral = guinchosGeral.filter(g => g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
             
             let f = t.length === 0 ? guinchosGeral : guinchosGeral.filter(g=>(g.dataShow&&g.dataShow.toLowerCase().includes(t))||(g.motNome&&g.motNome.toLowerCase().includes(t))||(g.placa&&g.placa.toLowerCase().includes(t))||(g.bpm&&g.bpm.toLowerCase().includes(t))||(g.talao&&g.talao.toLowerCase().includes(t)));
             if(f.length===0){tb.innerHTML="<tr><td colspan='8' style='text-align:center;'>Nenhum encontrado.</td></tr>";return;} 
             
             f.sort((a,b) => String(b.id).localeCompare(String(a.id))).forEach(g=>{
-                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') && g.criadoPor ? `<br><span style="font-size:9px;">👤 ${window.eH(g.criadoPor)}</span>` : '';
-                let podeEditar = window.postoAtivo !== 'Chefia' && (window.temAcessoTotal() || g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
+                let bUser = window.temAcessoTotal() && g.criadoPor ? `<br><span style="font-size:9px;">👤 ${window.eH(g.criadoPor)}</span>` : '';
+                let podeEditar = (window.temAcessoTotal() || g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
                 let btnDel = podeEditar ? `<button class="btn btn-del hide-leitura" onclick="excluirItem('guinchos', '${g.id}')">🗑️</button>` : '';
                 
                 let badgeCpf = g.motCpf ? `<br><span style="font-size:10px; background:#2b6cb0; color:white; padding:2px 6px; border-radius:4px; display:inline-block; margin-top:4px;" class="mono-font">CPF: ${window.eH(g.motCpf)}</span>` : '';
 
-                tb.innerHTML+=`<tr><td class="mono-font">${window.eH(g.dataShow)}${bUser}</td><td><strong>${window.eH(g.motNome)}</strong>${badgeCpf}</td><td class="mono-font" style="text-transform: uppercase;">${window.eH(g.placa)}</td><td>${window.eH(g.bpm)}</td><td class="mono-font">${window.eH(g.talao)}</td><td>${window.eH(g.patio)}</td><td class="no-print"><button class="btn hide-leitura ${g.chegou?'btn-status-ok':'btn-status-pend'}" onclick="altStatusGuincho('${g.id}')" ${window.postoAtivo === 'Chefia' ? 'disabled' : ''}>${g.chegou?'✅ Chegou':'🕒 Pendente'}</button></td><td class="no-print">${btnDel}</td></tr>`;
+                tb.innerHTML+=`<tr><td class="mono-font">${window.eH(g.dataShow)}${bUser}</td><td><strong>${window.eH(g.motNome)}</strong>${badgeCpf}</td><td class="mono-font" style="text-transform: uppercase;">${window.eH(g.placa)}</td><td>${window.eH(g.bpm)}</td><td class="mono-font">${window.eH(g.talao)}</td><td>${window.eH(g.patio)}</td><td class="no-print"><button class="btn hide-leitura ${g.chegou?'btn-status-ok':'btn-status-pend'}" onclick="altStatusGuincho('${g.id}')">${g.chegou?'✅ Chegou':'🕒 Pendente'}</button></td><td class="no-print">${btnDel}</td></tr>`;
             }); 
         }
-        window.altStatusGuincho = async function(id) { if(window.postoAtivo === 'Chefia') return; let g = window.getDB().guinchos.find(x => String(x.id) === String(id)); if(g) { g.chegou = !g.chegou; await setDoc(doc(dbFS, "guinchos", String(id)), g); } }
+        window.altStatusGuincho = async function(id) { let g = window.getDB().guinchos.find(x => String(x.id) === String(id)); if(g) { g.chegou = !g.chegou; await setDoc(doc(dbFS, "guinchos", String(id)), g); } }
 
         window.salvarSiopm = async function() { 
             const id = document.getElementById('sId').value ? Number(document.getElementById('sId').value) : window.gId(); 
@@ -1103,7 +1104,6 @@
         }
 
         window.encerrarOuReabrirSiopm = async function(id) { 
-            if(window.postoAtivo === 'Chefia') return;
             let i = window.getDB().siopm.find(x => String(x.id) === String(id)); if(!i) return;
             const podeAlterar = (window.temAcessoTotal() || i.criadoPor === window.postoAtivo || i.criadoPor === window.currentUserEmail);
             if(!podeAlterar) return alert(`🚫 ACESSO NEGADO: Lançado por ${i.criadoPor}.`);
@@ -1125,15 +1125,15 @@
             const fB=document.getElementById('filtroSiopmBpm').value; const fS=document.getElementById('filtroSiopmStatus').value; const dataHoje = window.getDataHoje();
 
             let f=window.getDB().siopm.filter(s => {
-                let visivelParaOperador = window.temAcessoTotal() || window.postoAtivo === 'Chefia' || (s.data === dataHoje || s.status === 'Aberto') || s.criadoPor === window.postoAtivo;
+                let visivelParaOperador = window.temAcessoTotal() || (s.data === dataHoje || s.status === 'Aberto') || s.criadoPor === window.postoAtivo;
                 return visivelParaOperador && (fB === 'todos' || s.bpm === fB) && (fS === 'todos' || s.status === fS);
             });
 
             if(f.length===0){ tb.innerHTML="<tr><td colspan='7' style='text-align:center;'>Nenhum registo.</td></tr>"; window.atualizarDashboard(); return; } 
             
             f.sort((a,b) => String(b.id).localeCompare(String(a.id))).forEach(s=>{
-                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<br><span style="font-size:9px;">👤 ${window.eH(s.criadoPor)}</span>` : '';
-                let podeEditar = window.postoAtivo !== 'Chefia';
+                let bUser = window.temAcessoTotal() ? `<br><span style="font-size:9px;">👤 ${window.eH(s.criadoPor)}</span>` : '';
+                let podeEditar = (window.temAcessoTotal() || s.criadoPor === window.postoAtivo || s.criadoPor === window.currentUserEmail);
                 let btnHtml = podeEditar ? `<button class="btn-action hide-leitura ${s.status==="Aberto"?"btn-edit":"btn-cancel"}" onclick="encerrarOuReabrirSiopm('${s.id}')">${s.status==="Aberto"?"🔓 Encerrar":"🔒 Reabrir"}</button> <button class="btn-action btn-del hide-leitura" onclick="excluirItem('siopm', '${s.id}')">🗑️</button>` : '';
                 
                 tb.innerHTML+=`<tr><td class="mono-font">${window.eH(s.data)}${bUser}</td><td><strong>${window.eH(s.bpm)}</strong></td><td class="mono-font">${window.eH(s.talao)}</td><td>${window.eH(s.periodo)}</td><td style="color:#2b6cb0; font-size:12px;">${window.eH(s.desfecho||'-')}</td><td><span class="badge-siopm ${s.status==="Aberto"?"badge-aberto":"badge-encerrado"}">${window.eH(s.status)}</span></td><td class="no-print">${btnHtml}</td></tr>`;
@@ -1190,7 +1190,7 @@
             log.forEach(l => { tb.innerHTML += `<tr><td class="mono-font">${window.eH(l.data)}</td><td><strong>${window.eH(l.user)}</strong></td><td>${window.eH(l.acao)}</td><td>${window.eH(l.detalhe)}</td></tr>`; });
         }
 
-        // BACKUP GERAL (PROFUNDO)
+        // BACKUP GERAL PROFUNDO
         window.gerarBackupGeral = async function() {
             if(!window.temAcessoTotal()) return alert("Apenas Administradores podem gerar backups.");
             
