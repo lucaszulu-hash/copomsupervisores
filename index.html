@@ -14,22 +14,33 @@
 
         body { margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg-color); display: flex; height: 100vh; overflow: hidden; }
 
+        /* ESTILOS DA PMESP (LOGOS E MARCA D'ÁGUA) */
+        .logo-pmesp-login { width: 120px; margin-bottom: 20px; filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.3)); }
+        .logo-pmesp-sidebar { width: 60px; margin-bottom: 10px; }
+        .logo-pmesp-print { width: 60px; height: auto; }
+        
+        .watermark-bg {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 500px; opacity: 0.03; pointer-events: none; z-index: 0;
+            filter: grayscale(100%);
+        }
+
         /* TELA DE LOGIN */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%); z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; color: white; transition: 0.3s opacity; }
-        .login-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; width: 300px; color: #2d3748; }
+        .login-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; width: 320px; color: #2d3748; z-index: 10000; }
         .login-box input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 5px; box-sizing: border-box; }
         .login-box button { width: 100%; padding: 12px; background-color: #2b6cb0; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .login-box button:hover { background-color: #1a365d; }
 
         /* MESA DE OPERAÇÕES */
         #role-selection-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(26, 32, 44, 0.95); z-index: 9998; justify-content: center; align-items: center; color: white; flex-direction: column; }
-        .role-box { background: white; color: #2d3748; padding: 30px; border-radius: 12px; width: 450px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 350px; overflow-y: auto; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: left; }
+        .role-box { background: white; color: #2d3748; padding: 30px; border-radius: 12px; width: 500px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 400px; overflow-y: auto; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: left; }
         .role-item { padding: 12px; border: 1px solid #cbd5e1; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.2s; }
         .role-item:hover:not(.taken) { background: #ebf8ff; border-color: #3182ce; }
-        .role-item.taken { background: #fff5f5; color: #c53030; border-color: #feb2b2; opacity: 0.7; }
+        .role-item.taken { background: #fff5f5; color: #c53030; border-color: #feb2b2; opacity: 0.8; }
         .role-item.selected { background: #3182ce; color: white; border-color: #2b6cb0; }
-        .role-item small { display: block; font-weight: normal; font-size: 11px; margin-top: 4px; }
+        .role-item small { display: block; font-weight: normal; font-size: 11px; margin-top: 4px; line-height: 1.3;}
 
         /* MENU LATERAL */
         #app-container { display: none; width: 100%; height: 100%; }
@@ -59,8 +70,9 @@
 
         /* CONTEÚDO PRINCIPAL */
         .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; position: relative; }
-        .screen { display: none; animation: fadeIn 0.3s; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); min-height: 80vh; }
+        .screen { display: none; animation: fadeIn 0.3s; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); min-height: 80vh; position: relative; overflow: hidden; }
         .screen.active { display: block; }
+        .screen > * { position: relative; z-index: 1; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* COMPONENTES GERAIS */
@@ -122,9 +134,11 @@
         /* CONTROLE DE VISIBILIDADE HIERÁRQUICA */
         #printIndividual, #printRelatorioGeral { display: none; }
         
+        /* Controles Exclusivos Admin/Master (Apenas para botões e opções) */
         .only-admin, .only-master { display: none; }
         body.is-master .only-master { display: block !important; }
         body.role-admin .only-admin { display: block !important; }
+        
         body.role-leitura .hide-leitura { display: none !important; }
         
         /* Ocultar menus para perfis pendentes */
@@ -174,8 +188,9 @@
 
     <div id="login-screen">
         <div class="login-box">
-            <h1 style="color:#2b6cb0; margin-top:0;">COPOM Supervisores</h1>
-            <p style="color:#718096; font-size:13px; margin-bottom:25px;">Comando & Controle - Acesso Restrito</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Bras%C3%A3o_PMSP.PNG" alt="Brasão PMESP" class="logo-pmesp-login">
+            <h1 style="color:#2b6cb0; margin-top:0; font-size: 24px;">COPOM Supervisores</h1>
+            <p style="color:#718096; font-size:11px; margin-bottom:25px; font-weight: bold;">POLÍCIA MILITAR DO ESTADO DE SÃO PAULO</p>
             <input type="email" id="loginEmail" placeholder="Digite o seu e-mail">
             <input type="password" id="loginSenha" placeholder="Digite a sua senha">
             <button onclick="fazerLogin()">Acessar Sistema</button>
@@ -195,6 +210,7 @@
 
     <div id="role-selection-screen">
         <div class="role-box">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Bras%C3%A3o_PMSP.PNG" alt="Brasão PMESP" style="width: 80px; margin-bottom: 10px;">
             <h2 style="margin-top:0; border:none; justify-content:center; color:#1a202c;">Mesa de Operações</h2>
             <p style="font-size:13px; color:#718096; margin-bottom:20px;">Selecione o seu Posto de Serviço para assumir o turno:</p>
             <div id="gridPostos" class="role-grid"></div>
@@ -211,6 +227,7 @@
     <div id="app-container">
         <div class="sidebar">
             <div class="sidebar-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Bras%C3%A3o_PMSP.PNG" alt="Brasão PMESP" class="logo-pmesp-sidebar">
                 <h2>COPOM</h2><p>Supervisores ☁️</p>
                 <div id="tagAdmin">👑 PRIVILÉGIO ADMIN</div>
                 <div id="infoFuncaoAtiva">AGUARDANDO POSTO...</div>
@@ -237,6 +254,8 @@
         <div class="main-content">
             
             <div id="tela-dashboard" class="screen active">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Bras%C3%A3o_PMSP.PNG" alt="Brasão PMESP" class="watermark-bg">
+
                 <div id="banner-pendente" style="display:none; background-color: #fefcbf; color: #975a16; border-left: 4px solid #d69e2e; padding: 15px; border-radius: 4px; margin-bottom: 20px; font-size: 14px;">
                     <strong>⚠️ Sala de Espera:</strong> O seu perfil foi registado e encontra-se pendente. O seu acesso está limitado até o Comandante aprovar a sua conta.
                 </div>
@@ -782,7 +801,7 @@
 
             let h1Titulo = window.temAcessoTotal() ? "Relatório de Ocorrências de Vulto" : "Relatório Geral Diário";
 
-            let html = `<div style="font-family:sans-serif; color:#2d3748; padding:10px;"><div class="print-header"><div><h1 style="margin:0; font-size:24px;">${h1Titulo}</h1><h2 style="margin:5px 0 0 0; color:#718096; font-size:14px;">COPOM Supervisores</h2></div><div style="text-align:right;"><p style="font-size:14px; font-weight:bold; background:#edf2f7; padding:8px;">Período: ${sOn} e ${sHj}</p></div></div>`;
+            let html = `<div style="font-family:sans-serif; color:#2d3748; padding:10px;"><div class="print-header"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Bras%C3%A3o_PMSP.PNG" class="logo-pmesp-print"><div><h1 style="margin:0; font-size:24px;">${h1Titulo}</h1><h2 style="margin:5px 0 0 0; color:#718096; font-size:14px;">COPOM Supervisores</h2></div><div style="text-align:right;"><p style="font-size:14px; font-weight:bold; background:#edf2f7; padding:8px;">Período: ${sOn} e ${sHj}</p></div></div>`;
             
             if (!window.temAcessoTotal()) {
                 html += `<div style="margin-bottom:30px;"><h3 class="print-section-title print-title-mapa">1. EFETIVO ESCALADO</h3>`;
@@ -837,16 +856,16 @@
             document.getElementById('dashEfetivo').innerText = db.efetivo.length; 
             
             let ocoDash = db.ocorrencias;
-            if(!window.temAcessoTotal()) ocoDash = ocoDash.filter(o => o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
+            if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') ocoDash = ocoDash.filter(o => o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
             document.getElementById('dashOcorrencias').innerText = ocoDash.filter(o => vs.includes(o.data)).length; 
 
             let guinchosDash = db.guinchos;
-            if(!window.temAcessoTotal()) guinchosDash = guinchosDash.filter(g => g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
+            if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') guinchosDash = guinchosDash.filter(g => g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
             document.getElementById('dashGuinchos').innerText = guinchosDash.filter(g => g.dataShow && vs.includes(g.dataShow.split(' ')[0])).length;
         }
 
         window.atualizarFiltroAdminMapa = function() {
-            if(window.temAcessoTotal()) {
+            if(window.temAcessoTotal() || window.postoAtivo === 'Chefia') {
                 const sel = document.getElementById('filtroAdminUsuarioMapa');
                 sel.style.display = 'inline-block'; const atual = sel.value;
                 let html = `<option value="todos">👑 Admin / Chefia: Todos os Postos</option>`;
@@ -946,7 +965,7 @@
             const dt = document.getElementById('dataMapa').value; const contSup = document.getElementById('containerSupervisao'); const contBpm = document.getElementById('containerBatalhoes'); contSup.innerHTML = ""; contBpm.innerHTML = ""; 
             let dia = window.getDB().mapaForca.filter(r => r.data === dt);
             
-            if (!window.temAcessoTotal()) dia = dia.filter(r => r.criadoPor === window.postoAtivo || r.criadoPor === window.currentUserEmail);
+            if (!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') dia = dia.filter(r => r.criadoPor === window.postoAtivo || r.criadoPor === window.currentUserEmail);
             else { 
                 const selUser = document.getElementById('filtroAdminUsuarioMapa').value; 
                 if(selUser !== 'todos') dia = dia.filter(r => r.criadoPor === selUser); 
@@ -956,13 +975,10 @@
             if(sup.length > 0) { 
                 contSup.innerHTML = `<h3 class="secao-titulo">👑 Supervisão do Turno</h3>`; 
                 sup.forEach(s => { 
-                    let bUser = window.temAcessoTotal() ? `<span style="font-size:9px; background:#edf2f7; color:#4a5568; padding:2px 4px; border-radius:4px; margin-top:4px; display:inline-block;">👤 ${window.eH(s.criadoPor || 'Legado')}</span>` : '';
-                    
-                    // A Chefia e Admins têm poder total de edição aqui
-                    let podeEditar = (window.temAcessoTotal() || s.criadoPor === window.postoAtivo || s.criadoPor === window.currentUserEmail);
+                    let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<span style="font-size:9px; background:#edf2f7; color:#4a5568; padding:2px 4px; border-radius:4px; margin-top:4px; display:inline-block;">👤 ${window.eH(s.criadoPor || 'Legado')}</span>` : '';
+                    let podeEditar = (window.temAcessoTotal() || s.criadoPor === window.postoAtivo || s.criadoPor === window.currentUserEmail || window.postoAtivo === 'Chefia');
                     let btnEdit = podeEditar ? `<button class="btn-edit no-print hide-leitura" onclick="prepararEdicaoMapa('${s.id}')" style="margin-top:5px; margin-right:5px; display:inline-block; float:right; padding: 2px 5px;">✏️</button>` : '';
                     let btnDel = podeEditar ? `<button class="btn-del no-print hide-leitura" onclick="excluirItem('mapaForca', '${s.id}')" style="margin-top:5px; display:block; float:right;">🗑️</button>` : '';
-                    
                     contSup.innerHTML += `<div class="card-sup"><div><span class="funcao">${window.eH(s.funcao)}</span><span class="nome">${window.eH(s.nome)}</span>${bUser}</div><div style="text-align:right"><span style="font-size:11px; display:block">${window.eH(s.unidade)}</span><span class="mono-font" style="font-size:12px; color:#edf2f7;">${window.eH(s.tel||'')}</span>${btnDel}${btnEdit}</div></div>`; 
                 }); 
             }
@@ -972,12 +988,10 @@
                     let html = `<div class="bloco-bpm"><div class="header-bpm">${window.eH(unid)}</div>`;
                     let mil = op.filter(r => r.unidade === unid).sort((a,b)=>{if(a.funcao==="CFP"&&b.funcao!=="CFP")return -1;if(b.funcao==="CFP"&&a.funcao!=="CFP")return 1;return a.cia.localeCompare(b.cia);});
                     mil.forEach(m => { 
-                        let bUser = window.temAcessoTotal() ? `<div style="font-size:8px; color:#a0aec0; margin-top:2px;">👤 ${window.eH(m.criadoPor || 'Legado')}</div>` : '';
-                        
-                        let podeEditar = (window.temAcessoTotal() || m.criadoPor === window.postoAtivo || m.criadoPor === window.currentUserEmail);
+                        let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<div style="font-size:8px; color:#a0aec0; margin-top:2px;">👤 ${window.eH(m.criadoPor || 'Legado')}</div>` : '';
+                        let podeEditar = (window.temAcessoTotal() || m.criadoPor === window.postoAtivo || m.criadoPor === window.currentUserEmail || window.postoAtivo === 'Chefia');
                         let btnEdit = podeEditar ? `<button class="btn-edit hide-leitura" onclick="prepararEdicaoMapa('${m.id}')">✏️</button> ` : '';
                         let btnDel = podeEditar ? `<button class="btn-del hide-leitura" onclick="excluirItem('mapaForca', '${m.id}')">🗑️</button>` : '';
-                        
                         html += `<div class="linha-militar ${m.funcao==='CFP'?'cfp':'cgp'}"><div class="info-funcao"><span class="badge ${m.funcao==='CFP'?'badge-cfp':'badge-cgp'}">${window.eH(m.funcao)}</span></div><div class="info-nome">${window.eH(m.nome)}${bUser}</div><div class="info-cia">${window.eH(m.cia)}</div><div class="info-tel mono-font">${window.eH(m.tel||'-')}</div><div class="no-print" style="min-width: 60px;">${btnEdit}${btnDel}</div></div>`; 
                     });
                     contBpm.innerHTML += html + `</div>`;
@@ -1035,16 +1049,16 @@
             const t=document.getElementById('buscaOcorrencia').value.toLowerCase().trim(); const tb=document.getElementById('tabelaOcorrencias'); tb.innerHTML=""; 
             let f = window.getDB().ocorrencias;
             
-            if(!window.temAcessoTotal()) f = f.filter(o => o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
+            if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') f = f.filter(o => o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
             if(t.length > 0) { f = f.filter(o=>o.data.includes(t)||o.bpm.toLowerCase().includes(t)||o.talao.toLowerCase().includes(t)||(o.historico&&o.historico.toLowerCase().includes(t))); }
             if(f.length===0){tb.innerHTML="<tr><td colspan='5' style='text-align:center;'>Nenhuma ocorrência.</td></tr>";return;} 
             
             f.sort((a,b) => String(b.id).localeCompare(String(a.id))).forEach(o=>{
-                let podeEditar = (window.temAcessoTotal() || o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
+                let podeEditar = (window.temAcessoTotal() || o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail || window.postoAtivo === 'Chefia');
                 let btnEdit = podeEditar ? `<button class="btn btn-edit no-print hide-leitura" onclick="prepararEdicaoOcorrencia('${o.id}')">✏️</button>` : '';
                 let btnPdf = podeEditar ? `<button class="btn btn-save no-print" style="background:#3182ce; padding:6px; font-size:11px;" onclick="baixarOcorrenciaInd('${o.id}')">🖨️ PDF</button>` : '';
                 let btnDel = podeEditar ? `<button class="btn btn-del hide-leitura" onclick="excluirItem('ocorrencias', '${o.id}')">🗑️</button>` : '';
-                let bUser = window.temAcessoTotal() && o.criadoPor ? `<div style="font-size:9px; color:#a0aec0;">👤 ${window.eH(o.criadoPor)}</div>` : '';
+                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') && o.criadoPor ? `<div style="font-size:9px; color:#a0aec0;">👤 ${window.eH(o.criadoPor)}</div>` : '';
 
                 tb.innerHTML+=`<tr><td class="mono-font">${window.eH(o.data)}</td><td><strong>${window.eH(o.bpm)}</strong></td><td class="mono-font">${window.eH(o.talao)}${bUser}</td><td><button class="btn btn-edit no-print" id="btn-hist-${o.id}" style="background:#718096; padding:6px;" onclick="toggleHistorico('${o.id}')">👁️ Exibir</button><div id="full-${o.id}" style="display:none; white-space:pre-wrap; background:#fffaf0; padding:10px; margin-top:5px;">${window.eH(o.historico)}</div></td><td class="no-print">${btnEdit} ${btnPdf} ${btnDel}</td></tr>`;
             }); 
@@ -1071,22 +1085,22 @@
         window.listarGuinchos = function() { 
             const t=document.getElementById('buscaGuincho').value.toLowerCase().trim(); const tb=document.getElementById('tabelaGuinchos'); tb.innerHTML=""; 
             let guinchosGeral = window.getDB().guinchos; 
-            if(!window.temAcessoTotal()) guinchosGeral = guinchosGeral.filter(g => g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
+            if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') guinchosGeral = guinchosGeral.filter(g => g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
             
             let f = t.length === 0 ? guinchosGeral : guinchosGeral.filter(g=>(g.dataShow&&g.dataShow.toLowerCase().includes(t))||(g.motNome&&g.motNome.toLowerCase().includes(t))||(g.placa&&g.placa.toLowerCase().includes(t))||(g.bpm&&g.bpm.toLowerCase().includes(t))||(g.talao&&g.talao.toLowerCase().includes(t)));
             if(f.length===0){tb.innerHTML="<tr><td colspan='8' style='text-align:center;'>Nenhum encontrado.</td></tr>";return;} 
             
             f.sort((a,b) => String(b.id).localeCompare(String(a.id))).forEach(g=>{
-                let bUser = window.temAcessoTotal() && g.criadoPor ? `<br><span style="font-size:9px;">👤 ${window.eH(g.criadoPor)}</span>` : '';
-                let podeEditar = (window.temAcessoTotal() || g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
+                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') && g.criadoPor ? `<br><span style="font-size:9px;">👤 ${window.eH(g.criadoPor)}</span>` : '';
+                let podeEditar = window.postoAtivo !== 'Chefia' && (window.temAcessoTotal() || g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
                 let btnDel = podeEditar ? `<button class="btn btn-del hide-leitura" onclick="excluirItem('guinchos', '${g.id}')">🗑️</button>` : '';
                 
                 let badgeCpf = g.motCpf ? `<br><span style="font-size:10px; background:#2b6cb0; color:white; padding:2px 6px; border-radius:4px; display:inline-block; margin-top:4px;" class="mono-font">CPF: ${window.eH(g.motCpf)}</span>` : '';
 
-                tb.innerHTML+=`<tr><td class="mono-font">${window.eH(g.dataShow)}${bUser}</td><td><strong>${window.eH(g.motNome)}</strong>${badgeCpf}</td><td class="mono-font" style="text-transform: uppercase;">${window.eH(g.placa)}</td><td>${window.eH(g.bpm)}</td><td class="mono-font">${window.eH(g.talao)}</td><td>${window.eH(g.patio)}</td><td class="no-print"><button class="btn hide-leitura ${g.chegou?'btn-status-ok':'btn-status-pend'}" onclick="altStatusGuincho('${g.id}')">${g.chegou?'✅ Chegou':'🕒 Pendente'}</button></td><td class="no-print">${btnDel}</td></tr>`;
+                tb.innerHTML+=`<tr><td class="mono-font">${window.eH(g.dataShow)}${bUser}</td><td><strong>${window.eH(g.motNome)}</strong>${badgeCpf}</td><td class="mono-font" style="text-transform: uppercase;">${window.eH(g.placa)}</td><td>${window.eH(g.bpm)}</td><td class="mono-font">${window.eH(g.talao)}</td><td>${window.eH(g.patio)}</td><td class="no-print"><button class="btn hide-leitura ${g.chegou?'btn-status-ok':'btn-status-pend'}" onclick="altStatusGuincho('${g.id}')" ${window.postoAtivo === 'Chefia' ? 'disabled' : ''}>${g.chegou?'✅ Chegou':'🕒 Pendente'}</button></td><td class="no-print">${btnDel}</td></tr>`;
             }); 
         }
-        window.altStatusGuincho = async function(id) { let g = window.getDB().guinchos.find(x => String(x.id) === String(id)); if(g) { g.chegou = !g.chegou; await setDoc(doc(dbFS, "guinchos", String(id)), g); } }
+        window.altStatusGuincho = async function(id) { if(window.postoAtivo === 'Chefia') return; let g = window.getDB().guinchos.find(x => String(x.id) === String(id)); if(g) { g.chegou = !g.chegou; await setDoc(doc(dbFS, "guinchos", String(id)), g); } }
 
         window.salvarSiopm = async function() { 
             const id = document.getElementById('sId').value ? Number(document.getElementById('sId').value) : window.gId(); 
@@ -1105,7 +1119,7 @@
 
         window.encerrarOuReabrirSiopm = async function(id) { 
             let i = window.getDB().siopm.find(x => String(x.id) === String(id)); if(!i) return;
-            const podeAlterar = (window.temAcessoTotal() || i.criadoPor === window.postoAtivo || i.criadoPor === window.currentUserEmail);
+            const podeAlterar = (window.temAcessoTotal() || i.criadoPor === window.postoAtivo || i.criadoPor === window.currentUserEmail || window.postoAtivo === 'Chefia');
             if(!podeAlterar) return alert(`🚫 ACESSO NEGADO: Lançado por ${i.criadoPor}.`);
 
             if(i.status === 'Aberto') { 
@@ -1125,15 +1139,15 @@
             const fB=document.getElementById('filtroSiopmBpm').value; const fS=document.getElementById('filtroSiopmStatus').value; const dataHoje = window.getDataHoje();
 
             let f=window.getDB().siopm.filter(s => {
-                let visivelParaOperador = window.temAcessoTotal() || (s.data === dataHoje || s.status === 'Aberto') || s.criadoPor === window.postoAtivo;
+                let visivelParaOperador = window.temAcessoTotal() || window.postoAtivo === 'Chefia' || (s.data === dataHoje || s.status === 'Aberto') || s.criadoPor === window.postoAtivo;
                 return visivelParaOperador && (fB === 'todos' || s.bpm === fB) && (fS === 'todos' || s.status === fS);
             });
 
             if(f.length===0){ tb.innerHTML="<tr><td colspan='7' style='text-align:center;'>Nenhum registo.</td></tr>"; window.atualizarDashboard(); return; } 
             
             f.sort((a,b) => String(b.id).localeCompare(String(a.id))).forEach(s=>{
-                let bUser = window.temAcessoTotal() ? `<br><span style="font-size:9px;">👤 ${window.eH(s.criadoPor)}</span>` : '';
-                let podeEditar = (window.temAcessoTotal() || s.criadoPor === window.postoAtivo || s.criadoPor === window.currentUserEmail);
+                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<br><span style="font-size:9px;">👤 ${window.eH(s.criadoPor)}</span>` : '';
+                let podeEditar = (window.temAcessoTotal() || s.criadoPor === window.postoAtivo || s.criadoPor === window.currentUserEmail || window.postoAtivo === 'Chefia');
                 let btnHtml = podeEditar ? `<button class="btn-action hide-leitura ${s.status==="Aberto"?"btn-edit":"btn-cancel"}" onclick="encerrarOuReabrirSiopm('${s.id}')">${s.status==="Aberto"?"🔓 Encerrar":"🔒 Reabrir"}</button> <button class="btn-action btn-del hide-leitura" onclick="excluirItem('siopm', '${s.id}')">🗑️</button>` : '';
                 
                 tb.innerHTML+=`<tr><td class="mono-font">${window.eH(s.data)}${bUser}</td><td><strong>${window.eH(s.bpm)}</strong></td><td class="mono-font">${window.eH(s.talao)}</td><td>${window.eH(s.periodo)}</td><td style="color:#2b6cb0; font-size:12px;">${window.eH(s.desfecho||'-')}</td><td><span class="badge-siopm ${s.status==="Aberto"?"badge-aberto":"badge-encerrado"}">${window.eH(s.status)}</span></td><td class="no-print">${btnHtml}</td></tr>`;
@@ -1146,7 +1160,7 @@
 
         window.excluirItem = async function(tabela, id) { 
             let info = window.getDB()[tabela].find(x => String(x.id) === String(id)); if(!info) return;
-            if(!window.temAcessoTotal() && info.criadoPor !== window.currentUserEmail && info.criadoPor !== window.postoAtivo) { return alert("Negado: Só pode apagar os seus registros."); }
+            if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia' && info.criadoPor !== window.currentUserEmail && info.criadoPor !== window.postoAtivo) { return alert("Negado: Só pode apagar os seus registros."); }
             if(confirm("Confirma exclusão permanente?")) { await deleteDoc(doc(dbFS, tabela, String(id))); window.registrarAuditoria('Excluiu Registo', `Tabela [${tabela}]`); } 
         }
 
