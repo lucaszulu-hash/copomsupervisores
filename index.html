@@ -426,7 +426,7 @@
                     </summary>
                     <div style="margin-top: 25px; display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                         <input type="text" id="buscaServidorTalao" placeholder="Digite Talão, BPM ou trecho do Histórico..." style="width: 420px; padding: 14px; margin-bottom: 0;" class="mono-font">
-                        <button class="btn btn-print" onclick="buscarNoArquivoOcorrencia()" style="padding: 14px 30px; background: #4a5568;">Pesquisar nos Arquivos</button>
+                        <button class="btn btn-print" onclick="quivoOcorrencia()" style="padding: 14px 30px; background: #4a5568;">Pesquisar nos Arquivos</button>
                     </div>
                     <div id="resultadoArquivo" style="margin-top: 25px;"></div>
                 </details>
@@ -1054,23 +1054,46 @@
             }
         }
 
-        window.buscarNoArquivoOcorrencia = async function() {
+      window.buscarNoArquivoOcorrencia = async function() {
             const termo = document.getElementById('buscaServidorTalao').value.toLowerCase().trim();
             const resDiv = document.getElementById('resultadoArquivo');
-            if(!termo) return resDiv.innerHTML = "<div style='background:#fff5f5; color:#c53030; padding:15px; border-radius:8px; font-weight:700; border-left:5px solid #e53e3e;'>⚠️ Aviso Operacional: O campo de busca está vazio. Digite um talão para continuar.</div>";
-            resDiv.innerHTML = "<div style='background:#ebf8ff; color:#2b6cb0; padding:15px; border-radius:8px; font-weight:700;'><em>⏳ Vasculhando os arquivos confidenciais do servidor...</em></div>";
+            if(!termo) return resDiv.innerHTML = "<div style='background:#fff5f5; color:#c53030; padding:10px; border-radius:4px; font-weight:bold; border-left:4px solid #e53e3e;'>⚠️ Aviso Operacional: O campo de busca está vazio. Digite um talão para continuar.</div>";
+            resDiv.innerHTML = "<div style='background:#ebf8ff; color:#2b6cb0; padding:10px; border-radius:4px; font-weight:bold;'><em>⏳ Vasculhando os arquivos confidenciais do servidor...</em></div>";
             try {
                 const snap = await getDocs(collection(dbFS, "ocorrencias"));
                 let resultados = [];
                 snap.forEach(d => { let o = d.data(); if ((o.talao && o.talao.toLowerCase().includes(termo)) || (o.bpm && o.bpm.toLowerCase().includes(termo)) || (o.historico && o.historico.toLowerCase().includes(termo))) { resultados.push(o); } });
-                if(resultados.length === 0) return resDiv.innerHTML = "<div style='background:#f8fafc; color:#718096; padding:15px; border-radius:8px; border:1px solid #e2e8f0;'>Nenhuma ocorrência encontrada correspondente aos dados inseridos.</div>";
+                
+                if(resultados.length === 0) return resDiv.innerHTML = "<div style='background:#f8fafc; color:#718096; padding:10px; border-radius:4px;'>Nenhuma ocorrência encontrada correspondente aos dados inseridos.</div>";
+                
                 resultados.sort((a,b) => String(b.id).localeCompare(String(a.id)));
-                let html = `<div style="background:#f0fdf4; color:#166534; padding:15px; border-radius:8px; font-weight:700; margin-bottom:20px; border:1px solid #bbf7d0;">✅ Pesquisa Concluída: ${resultados.length} ocorrências localizadas nos arquivos.</div>`;
-                resultados.forEach(o => { html += `<div style="background:#fff; padding:25px; border-left:5px solid #3182ce; margin-bottom:20px; border-radius:12px; box-shadow:var(--shadow-soft); border-top:1px solid #e2e8f0; border-right:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0;"><div style="font-size:13px; color:#718096; border-bottom: 2px solid #edf2f7; padding-bottom:12px;"><strong>📅 Ocorrido em:</strong> ${window.eH(o.data)} &nbsp;&nbsp;|&nbsp;&nbsp; <strong>🚓 Unidade:</strong> ${window.eH(o.bpm)} &nbsp;&nbsp;|&nbsp;&nbsp; <strong>📜 Tálão Oficial:</strong> <span class="mono-font" style="color:#2d3748; background:#edf2f7; padding:4px 8px; border-radius:6px;">${window.eH(o.talao)}</span></div><div style="white-space:pre-wrap; font-size:15px; margin-top:15px; line-height:1.6; color:#2d3748;">${window.eH(o.historico)}</div></div>`; });
-                resDiv.innerHTML = html;
-            } catch(e) { resDiv.innerHTML = "<div style='background:#fff5f5; color:#c53030; padding:15px; border-radius:8px; font-weight:700;'>Falha na comunicação cifrada com o servidor principal. Tente novamente mais tarde.</div>"; }
-        }
+                
+                // Salva a pesquisa temporariamente para o botão de PDF conseguir achá-la
+                window.resultadosBuscaArquivo = resultados; 
 
+                let html = `<div style="background:#f0fdf4; color:#166534; padding:10px; border-radius:4px; font-weight:bold; margin-bottom:15px; border:1px solid #bbf7d0;">✅ Pesquisa Concluída: ${resultados.length} ocorrências localizadas nos arquivos.</div>`;
+                
+                resultados.forEach(o => { 
+                    html += `
+                    <div style="background:#fff; padding:20px; border-left:4px solid #3182ce; margin-bottom:15px; border-radius:6px; box-shadow:var(--shadow-soft); border-top:1px solid #e2e8f0; border-right:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0;">
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #edf2f7; padding-bottom:10px;">
+                            <div style="font-size:12px; color:#718096;">
+                                <strong>📅 Ocorrido em:</strong> ${window.eH(o.data)} &nbsp;&nbsp;|&nbsp;&nbsp; 
+                                <strong>🚓 Unidade:</strong> ${window.eH(o.bpm)} &nbsp;&nbsp;|&nbsp;&nbsp; 
+                                <strong>📜 Tálão Oficial:</strong> <span class="mono-font" style="color:#2d3748; background:#edf2f7; padding:2px 6px; border-radius:4px;">${window.eH(o.talao)}</span>
+                            </div>
+                            
+                            <!-- BOTÃO DE IMPRESSÃO INSERIDO AQUI -->
+                            <button class="btn btn-save no-print" style="background:#2b6cb0; padding:6px 12px; font-size:11px; border-radius: 4px; width: auto;" onclick="baixarOcorrenciaInd('${o.id}')">🖨️ Imprimir Extrato</button>
+                        </div>
+
+                        <div style="white-space:pre-wrap; font-size:14px; margin-top:12px; line-height:1.5; color:#2d3748;">${window.eH(o.historico)}</div>
+                    </div>`; 
+                });
+                resDiv.innerHTML = html;
+            } catch(e) { resDiv.innerHTML = "<div style='background:#fff5f5; color:#c53030; padding:10px; border-radius:4px; font-weight:bold;'>Falha na comunicação cifrada com o servidor principal. Tente novamente mais tarde.</div>"; }
+        }
         // CHEFIA AGORA VOLTA A PODER GRAVAR OCORRÊNCIA
         window.salvarOcorrencia = async function() { 
             if(window.postoAtivo === "Aguardando Aprovação") return alert("Acesso Negado à Base.");
@@ -1095,8 +1118,17 @@
         }
         window.cancelarEdicaoOcorrencia = function() { document.getElementById('oId').value = ""; document.getElementById('oBpm').value = ""; document.getElementById('oTalao').value = ""; document.getElementById('oHistorico').value = ""; document.querySelector('#tela-ocorrencias .btn-save').innerText = "💾 Registrar Ocorrência"; document.querySelector('#tela-ocorrencias .btn-save').style.background = "#48bb78"; document.getElementById('btnCancelarOcorrencia').style.display = "none"; }
 
-        window.baixarOcorrenciaInd = function(id) {
-            let o = window.getDB().ocorrencias.find(x => String(x.id) === String(id)); if(!o) return;
+       window.baixarOcorrenciaInd = function(id) {
+            // Procura nos dados recentes (4 dias)
+            let o = window.getDB().ocorrencias.find(x => String(x.id) === String(id));
+            
+            // Se não achar, procura no histórico pesquisado no servidor
+            if (!o && window.resultadosBuscaArquivo) {
+                o = window.resultadosBuscaArquivo.find(x => String(x.id) === String(id));
+            }
+
+            if(!o) return alert("Erro: Ocorrência não encontrada para impressão.");
+
             const tOrig = document.title; document.title = `RELATORIO DE VULTO - TALAO ${window.eH(o.talao)} - ${o.data.replace(/\//g,'-')}`;
             document.getElementById('printIndividual').innerHTML = `<div style="padding: 30px; font-family: sans-serif;"><div style="display:flex; justify-content: space-between; align-items:center; border-bottom: 3px solid #1a202c; padding-bottom: 20px; margin-bottom: 30px;"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Bras%C3%A3o_PMSP.PNG" style="width: 70px;"><div style="text-align:right;"><h2 style="margin:0; font-size:22px;">INFORMAÇÃO OFICIAL DE OCORRÊNCIA DE VULTO</h2><p style="margin:5px 0 0 0; font-weight:bold; color:#718096;">COPOM - Polícia Militar do Estado de São Paulo</p></div></div><div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:20px; margin-bottom:30px;"><div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;"><p style="margin:0; font-size:16px;"><strong>Data do Registro:</strong> ${window.eH(o.data)}</p><p style="margin:0; font-size:16px;"><strong>Batalhão de Área:</strong> ${window.eH(o.bpm)}</p><p style="margin:0; font-size:16px;"><strong>Identificador (Talão):</strong> ${window.eH(o.talao)}</p><p style="margin:0; font-size:16px;"><strong>Supervisor Responsável:</strong> ${window.eH(o.criadoPor || 'Sistema Legado')}</p></div></div><h3 style="border-bottom: 1px solid #cbd5e1; padding-bottom:10px; color:#2d3748;">Dinâmica dos Fatos Narrados</h3><p style="white-space: pre-wrap; font-size:15px; line-height:1.6; color:#1a202c;">${window.eH(o.historico)}</p><div style="margin-top: 50px; text-align:center; border-top: 1px dashed #a0aec0; padding-top:20px;"><p style="font-size:12px; color:#718096;">Documento gerado automaticamente pelo Sistema de Supervisão COPOM.<br>O conteúdo relatado é de responsabilidade da mesa expedidora.</p></div></div>`;
             document.body.classList.add('printing-individual'); window.print(); document.body.classList.remove('printing-individual'); setTimeout(() => { document.title = tOrig; }, 1000);
