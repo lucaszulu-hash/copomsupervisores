@@ -106,7 +106,7 @@
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(221, 107, 32, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(221, 107, 32, 0); } 100% { box-shadow: 0 0 0 0 rgba(221, 107, 32, 0); } }
 
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 15px; font-size: 14px; position: relative; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;}
-        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid #e2e8f0;}
+        th, td { padding: 16px 20px; text-align: left; border-bottom: 1px solid #e2e8f0; word-wrap: break-word;}
         th { background-color: #2d3748; color: white; position: sticky; top: -40px; z-index: 10; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;}
         td { background-color: #fff; transition: background-color 0.2s ease;}
         tr:last-child td { border-bottom: none; }
@@ -199,7 +199,6 @@
         </div>
     </div>
 
-    <!-- TELA DE LOGIN -->
     <div id="login-screen">
         <div class="login-box">
             <h1 style="color:#2b6cb0; margin-top:0; font-size: 32px; font-weight: 900;">COPOM Supervisores</h1>
@@ -222,7 +221,6 @@
         </div>
     </div>
 
-    <!-- MESA DE OPERAÇÕES -->
     <div id="role-selection-screen">
         <div class="role-box">
             <h2 style="margin-top:0; border:none; justify-content:center; color:#1a202c; font-size: 26px;">Mesa de Operações</h2>
@@ -267,7 +265,6 @@
 
         <div class="main-content">
             
-            <!-- PAINEL GERAL -->
             <div id="tela-dashboard" class="screen active">
 
                 <div id="banner-pendente" style="display:none; background-color: #fefcbf; color: #975a16; border-left: 5px solid #d69e2e; padding: 20px; border-radius: 12px; margin-bottom: 30px; font-size: 15px; box-shadow: var(--shadow-soft);">
@@ -291,7 +288,6 @@
                     
                     <div style="background: #f8fafc; padding: 25px; border-radius: 12px; display: inline-block; margin-bottom: 30px; border: 1px solid #e2e8f0;">
                         <label style="font-weight: 700; color: #2b6cb0; font-size: 15px; margin-right: 15px; display: inline;">Data do Plantão:</label>
-                        <!-- GATILHO ONCHANGE INSERIDO AQUI PARA ATUALIZAR OS NUMEROS EM TEMPO REAL -->
                         <input type="date" id="dataRelatorioDashboard" onchange="atualizarDashboard()" style="padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-weight: 600; color: #2d3748; outline: none; width: auto; display: inline; margin-bottom: 0;" class="mono-font">
                     </div>
                     <br>
@@ -299,7 +295,6 @@
                 </div>
             </div>
 
-            <!-- SIOPM -->
             <div id="tela-siopm" class="screen">
                 <h2>
                     <span>Controlo de Talões (SIOPM Inoperante)</span>
@@ -334,7 +329,6 @@
                 </table>
             </div>
 
-            <!-- EFETIVO -->
             <div id="tela-efetivo" class="screen">
                 <h2>
                     <span>Base Única de Policiais (Contatos)</span>
@@ -369,7 +363,6 @@
                 </table>
             </div>
 
-            <!-- MAPA DE FORÇA -->
             <div id="tela-mapa" class="screen">
                 <h2>
                     <span>Mapa de Força Operacional (Individual)</span>
@@ -393,8 +386,6 @@
                         <div><label>Função</label><select id="mFuncao"><option>SUP SOBREAVISO</option><option>SUP REGIONAL</option><option>PPJMD</option><option>CFP</option><option>CGP</option></select></div>
                         <div><label>Militar (Digite para buscar)</label><input type="text" id="mNome" list="listaEfetivoMapa" oninput="autoPreencherMapa(this.value)"><datalist id="listaEfetivoMapa"></datalist></div>
                         <div><label>BPM</label><input type="text" id="mUnidade" readonly style="background:#edf2f7; border-color: #e2e8f0; color: #718096; font-weight: 700;"></div>
-                        
-                        <!-- LISTA DE COMPANHIAS ATUALIZADA (1ª ATÉ 7ª E F.T) -->
                         <div>
                             <label>Cia</label>
                             <select id="mCia">
@@ -409,7 +400,6 @@
                                 <option>F.T</option>
                             </select>
                         </div>
-
                         <div style="display: flex; gap: 10px; align-items: end;">
                             <button class="btn btn-save" id="btnSalvarMapa" onclick="adicionarEscalaMapa()" style="padding: 14px;">➕ Lançar na Escala</button>
                             <button class="btn btn-restore" id="btnCancelarMapa" onclick="cancelarEdicaoMapa()" style="display:none; padding: 14px;">Cancelar</button>
@@ -420,7 +410,6 @@
                 <div id="containerBatalhoes"></div>
             </div>
 
-            <!-- OCORRÊNCIAS -->
             <div id="tela-ocorrencias" class="screen">
                 <h2>
                     <span>Ocorrências de Vulto</span>
@@ -464,7 +453,6 @@
                 </table>
             </div>
 
-            <!-- GUINCHOS -->
             <div id="tela-guinchos" class="screen">
                 <h2>
                     <span>Controle de Acionamentos (Guincho)</span>
@@ -475,13 +463,23 @@
                 
                 <details class="no-print hide-leitura" style="margin-bottom: 30px; background: #f8fafc; padding: 20px 30px; border: 1px solid #e2e8f0; border-radius: 12px;">
                     <summary style="font-weight: 700; cursor: pointer; color: #2b6cb0; font-size: 15px; outline: none; list-style: none; display: flex; align-items: center; gap: 10px;">
-                        <span style="background: #ebf8ff; padding: 6px; border-radius: 50%;">➕</span> Cadastrar Novo Motorista de Guincho Civil
+                        <span style="background: #ebf8ff; padding: 6px; border-radius: 50%;">➕</span> Gerenciar Motoristas de Guincho
                     </summary>
                     <div class="form-grid" style="margin-top: 25px;">
+                        <input type="hidden" id="cadMotId">
                         <div><label>Nome Completo do Motorista</label><input type="text" id="cadMotNome" placeholder="Ex: João da Silva"></div>
                         <div><label>CPF Oficial</label><input type="text" id="cadMotCpf" placeholder="Ex: 000.000.000-00" class="mono-font"></div>
-                        <div><button class="btn btn-save" onclick="salvarNovoMotorista()" style="padding: 14px;">💾 Cadastrar na Base</button></div>
+                        <div style="display: flex; gap: 10px; align-items: end;">
+                            <button class="btn btn-save" id="btnSalvarMot" onclick="salvarNovoMotorista()" style="padding: 14px;">💾 Cadastrar</button>
+                            <button class="btn btn-restore" id="btnCancelarMot" onclick="cancelarEdicaoMotorista()" style="display:none; padding: 14px;">Cancelar</button>
+                        </div>
                     </div>
+                    
+                    <h4 style="margin-top: 30px; margin-bottom: 10px; color: #4a5568; font-size: 13px; text-transform: uppercase;">Lista de Motoristas Registrados</h4>
+                    <table>
+                        <thead><tr><th>Nome do Motorista</th><th>CPF Registrado</th><th style="width:120px;">Ações</th></tr></thead>
+                        <tbody id="tabelaListaMotoristas"></tbody>
+                    </table>
                 </details>
 
                 <div class="form-section no-print hide-leitura">
@@ -495,9 +493,15 @@
                     </div>
                 </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <input type="text" id="buscaGuincho" placeholder="🔍 Pesquisar despachos..." onkeyup="listarGuinchos()" style="width: 380px; padding: 14px 20px; border-radius: 30px; border: 2px solid #3182ce; margin-bottom: 0;">
+                <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;">
+                    <select id="filtroGuinchosStatus" onchange="listarGuinchos()" style="width: 250px; padding: 14px 20px; border-radius: 30px; border: 2px solid #cbd5e1; margin-bottom: 0; outline: none; background: #fff; font-weight: bold; color: #2d3748;">
+                        <option value="todos">🚦 Todos os Acionamentos</option>
+                        <option value="acionados">🕒 Apenas Em Rota (Acionados)</option>
+                        <option value="finalizados">✅ Apenas Finalizados (Pátio)</option>
+                    </select>
+                    <input type="text" id="buscaGuincho" placeholder="🔍 Pesquisar placa, talão ou motorista..." onkeyup="listarGuinchos()" style="flex: 1; min-width: 250px; padding: 14px 20px; border-radius: 30px; border: 2px solid #3182ce; margin-bottom: 0;">
                 </div>
+                <p style="color: #718096; font-size: 13px; margin-top: -10px; margin-bottom: 15px; font-weight: bold;">⚠️ Mostrando apenas os despachos das últimas 48 horas (2 dias).</p>
 
                 <table>
                     <thead><tr><th style="width:140px;">Data / Hora</th><th>Motorista Responsável</th><th style="width:110px;">Placa</th><th style="width:130px;">BPM</th><th style="width:110px;">Talão</th><th>Pátio Destino</th><th class="no-print" style="width:110px;">Acompanhamento</th><th class="no-print" style="width:70px;">Ação</th></tr></thead>
@@ -505,7 +509,6 @@
                 </table>
             </div>
 
-            <!-- GESTÃO DE PERFIS -->
             <div id="tela-usuarios" class="screen">
                 <h2><span>🛡️ Segurança e Gestão de Perfis</span></h2>
                 
@@ -523,12 +526,11 @@
                 </div>
 
                 <table style="max-width: 1000px; margin: 0 auto;">
-                    <thead><tr><th>E-mail Oficial do Utilizador</th><th style="width: 140px; text-align:center;">Status</th><th style="width: 180px; text-align:center;">Nível de Permissão</th><th class="no-print" style="width: 260px; text-align:center;">Controles de Segurança</th></tr></thead>
+                    <thead><tr><th>E-mail Oficial do Utilizador</th><th style="text-align:center;">Status</th><th style="text-align:center;">Nível de Permissão</th><th class="no-print" style="text-align:center;">Controles de Segurança</th></tr></thead>
                     <tbody id="tabelaUsuarios"></tbody>
                 </table>
             </div>
 
-            <!-- AUDITORIA -->
             <div id="tela-auditoria" class="screen">
                 <h2><span>📜 Histórico Imutável de Ações (Auditoria)</span></h2>
                 <input type="text" id="buscaAuditoria" placeholder="🔍 Investigar logs por nome, data ou termo..." onkeyup="listarAuditoria()" style="margin-bottom: 25px; width: 100%; max-width: 550px; padding: 16px 25px; border-radius: 30px; border: 2px solid #d69e2e; box-shadow: var(--shadow-soft);">
@@ -542,7 +544,6 @@
         </div>
     </div>
 
-    <!-- SCRIPT FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
@@ -595,7 +596,6 @@
         function resetarTimer() { clearTimeout(inatividadeTimer); if(window.currentUserEmail && window.postoAtivo && window.postoAtivo !== "Aguardando Aprovação") inatividadeTimer = setTimeout(mostrarAvisoInatividade, TEMPO_INATIVIDADE); }
         async function mostrarAvisoInatividade() { document.getElementById('modal-inatividade').style.display = 'flex'; await window.fazerLogout(); }
 
-        // AJUSTE DE FUSO HORÁRIO (Data Brasileira Correta)
         window.getDataLocalIso = function(d) {
             return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
         }
@@ -794,7 +794,6 @@
         }
 
         function iniciarSincronizacaoFirebase() {
-            // O RADAR DE TEMPO REAL CONTINUA SENDO RIGOROSAMENTE DE 4 DIAS (Alta velocidade)
             const limite4Dias = Date.now() - (4 * 24 * 60 * 60 * 1000);
 
             ['efetivo', 'motoristas'].forEach(colName => {
@@ -847,7 +846,6 @@
         window.formatarTelefoneParaSalvar = function(t) { if (!t) return ''; let n = t.replace(/\D/g, ''); if (n.length > 11) n = n.slice(-11); if (n.length === 11) return n.replace(/(\d{2})(\d{5})(\d{4})/, '$1-$2-$3'); else if (n.length === 10) return n.replace(/(\d{2})(\d{4})(\d{4})/, '$1-$2-$3'); return t; }
         window.imprimirTela = function(t) { const o = document.title; const d = window.getDataHoje().replace(/\//g,'-'); document.title = `${t.toUpperCase()} ${d}`; window.print(); setTimeout(() => { document.title = o; }, 1000); }
 
-        // BUSCA SOB DEMANDA (LAZY LOADING) NO RELATÓRIO PDF
         window.imprimirRelatorioGeral = async function() {
             const btn = document.querySelector('#box-relatorio-dashboard .btn-save');
             const txtOriginal = btn.innerText;
@@ -876,7 +874,6 @@
                 let mForca = [], guinchosTurno = [], oco = [], sio = [];
 
                 if (startTs < limite4Dias) {
-                    // MODO BUSCA PROFUNDA NO SERVIDOR
                     const qM = query(collection(dbFS, "mapaForca"), where("id", ">=", startTs), where("id", "<=", endTs));
                     const qG = query(collection(dbFS, "guinchos"), where("id", ">=", startTs), where("id", "<=", endTs));
                     const qO = query(collection(dbFS, "ocorrencias"), where("id", ">=", startTs), where("id", "<=", endTs));
@@ -889,7 +886,6 @@
                     oco = snapO.docs.map(doc => doc.data());
                     sio = snapS.docs.map(doc => doc.data());
                 } else {
-                    // MODO MEMÓRIA RÁPIDA
                     mForca = db.mapaForca;
                     guinchosTurno = db.guinchos;
                     oco = db.ocorrencias;
@@ -902,7 +898,6 @@
                 oco = oco.filter(x => dTs.includes(x.data)); 
                 sio = sio.filter(x => dTs.includes(x.data));
 
-                // REGRA ESTRITA DE CPA SOLICITADA
                 if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') {
                     mOn = mOn.filter(x => x.criadoPor === window.postoAtivo || x.criadoPor === window.currentUserEmail);
                     mHj = mHj.filter(x => x.criadoPor === window.postoAtivo || x.criadoPor === window.currentUserEmail);
@@ -916,7 +911,6 @@
 
                 let html = `<div style="font-family:sans-serif; color:#2d3748; padding:10px;"><div class="print-header"><div><h1 style="margin:0; font-size:24px;">${h1Titulo}</h1><h2 style="margin:5px 0 0 0; color:#718096; font-size:14px;">COPOM Supervisores</h2></div><div style="text-align:right;"><p style="font-size:14px; font-weight:bold; background:#edf2f7; padding:8px; border-radius: 4px;">Referência: ${sOn} e ${sHj}</p></div></div>`;
                 
-                // MAPA DE FORÇA
                 html += `<div style="margin-bottom:30px;"><h3 class="print-section-title print-title-mapa">1. EFETIVO ESCALADO E SUPERVISÃO</h3>`;
                 if (mOn.length===0 && mHj.length===0) html += `<p>Nenhum militar lançado em escala neste período.</p>`;
                 else {
@@ -965,7 +959,6 @@
             }
         }
 
-        // DASHBOARD AGORA PUXA DO ARQUIVO MORTO SE NECESSÁRIO
         window.atualizarDashboard = async function() {
             let db = window.getDB(); 
             const dStr = document.getElementById('dataRelatorioDashboard').value; 
@@ -1112,7 +1105,6 @@
         }
         window.cancelarEdicaoMapa = function() { document.getElementById('mId').value = ""; document.getElementById('mNome').value = ""; document.getElementById('mUnidade').value = ""; document.getElementById('btnSalvarMapa').innerText = "➕ Lançar na Escala"; document.getElementById('btnSalvarMapa').style.background = "#48bb78"; document.getElementById('btnCancelarMapa').style.display = "none"; document.getElementById('avisoEdicaoMapa').style.display = "none"; }
 
-        // MAPA DO DIA COM BUSCA SOB DEMANDA SE FOR ANTIGO
         window.carregarMapaDoDia = async function() {
             const dt = document.getElementById('dataMapa').value; 
             const contSup = document.getElementById('containerSupervisao'); 
@@ -1143,7 +1135,6 @@
             contSup.innerHTML = "";
             contBpm.innerHTML = ""; 
             
-            // REGRA ESTRITA DE CPA SOLICITADA
             if (!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') {
                 dia = dia.filter(r => r.criadoPor === window.postoAtivo || r.criadoPor === window.currentUserEmail);
             } else { 
@@ -1273,12 +1264,58 @@
         }
         window.toggleHistorico = function(id) { let f=document.getElementById('full-'+id); let b=document.getElementById('btn-hist-'+id); if(f.style.display==='none'){f.style.display='block';b.innerHTML='🙈 Ocultar Leitura'; b.style.background="#4a5568";}else{f.style.display='none';b.innerHTML='👁️ Ler Relatório'; b.style.background="#718096";} }
 
-        window.salvarNovoMotorista = async function() { 
-            let n=document.getElementById('cadMotNome').value.trim(); let c=document.getElementById('cadMotCpf').value.trim(); if(!n)return; 
-            let id = window.gId(); 
-            try { await setDoc(doc(dbFS, "motoristas", String(id)), {id:id, nome:n, cpf:c, criadoPor: window.postoAtivo || window.currentUserEmail}); document.getElementById('cadMotNome').value=""; document.getElementById('cadMotCpf').value=""; alert("Motorista homologado com sucesso no servidor do COPOM!"); } catch(e) { alert("🚫 Acesso restrito de edição."); }
+        // GESTÃO ABERTA DE MOTORISTAS (Guincheiros)
+        window.carregarSelectMotoristas = function() { 
+            const dl = document.getElementById('listaMotoristasGuincho'); dl.innerHTML = ""; 
+            const tb = document.getElementById('tabelaListaMotoristas'); tb.innerHTML = "";
+            let lista = window.getDB().motoristas.slice().sort((a, b) => a.nome.localeCompare(b.nome));
+            
+            if(lista.length === 0) { tb.innerHTML = "<tr><td colspan='3' style='text-align:center; color:#718096; padding:20px;'>Nenhum motorista cadastrado.</td></tr>"; }
+            
+            lista.forEach(m => { 
+                dl.innerHTML += `<option value="${window.eH(m.nome)}">CPF OFICIAL: ${window.eH(m.cpf || 'DADOS PENDENTES')}</option>`; 
+                tb.innerHTML += `<tr><td><strong>${window.eH(m.nome)}</strong></td><td class="mono-font">${window.eH(m.cpf || '-')}</td><td><button class="btn btn-edit" style="padding:6px 12px;" onclick="prepararEdicaoMotorista('${m.id}')">✏️</button> <button class="btn btn-del" style="padding:6px 12px;" onclick="excluirMotorista('${m.id}')">🗑️</button></td></tr>`;
+            }); 
         }
-        window.carregarSelectMotoristas = function() { const dl = document.getElementById('listaMotoristasGuincho'); dl.innerHTML = ""; window.getDB().motoristas.slice().sort((a, b) => a.nome.localeCompare(b.nome)).forEach(m => dl.innerHTML += `<option value="${window.eH(m.nome)}">CPF OFICIAL: ${window.eH(m.cpf || 'DADOS PENDENTES')}</option>`); }
+
+        window.prepararEdicaoMotorista = function(id) {
+            let m = window.getDB().motoristas.find(x => String(x.id) === String(id)); if(!m) return;
+            document.getElementById('cadMotId').value = m.id;
+            document.getElementById('cadMotNome').value = m.nome;
+            document.getElementById('cadMotCpf').value = m.cpf || '';
+            document.getElementById('btnSalvarMot').innerText = "💾 Atualizar";
+            document.getElementById('btnSalvarMot').style.background = "#d69e2e";
+            document.getElementById('btnCancelarMot').style.display = "block";
+        }
+
+        window.cancelarEdicaoMotorista = function() {
+            document.getElementById('cadMotId').value = "";
+            document.getElementById('cadMotNome').value = "";
+            document.getElementById('cadMotCpf').value = "";
+            document.getElementById('btnSalvarMot').innerText = "💾 Cadastrar";
+            document.getElementById('btnSalvarMot').style.background = "#48bb78";
+            document.getElementById('btnCancelarMot').style.display = "none";
+        }
+
+        window.salvarNovoMotorista = async function() { 
+            let n = document.getElementById('cadMotNome').value.trim(); 
+            let c = document.getElementById('cadMotCpf').value.trim(); 
+            let cid = document.getElementById('cadMotId').value;
+            if(!n) return alert("O Nome do motorista é obrigatório."); 
+            
+            let id = cid ? Number(cid) : window.gId(); 
+            try { 
+                await setDoc(doc(dbFS, "motoristas", String(id)), {id:id, nome:n, cpf:c, criadoPor: window.postoAtivo || window.currentUserEmail}); 
+                window.cancelarEdicaoMotorista(); 
+                if(!cid) alert("Motorista homologado com sucesso no servidor do COPOM!"); 
+            } catch(e) { alert("🚫 Acesso restrito de edição no Firebase."); }
+        }
+
+        window.excluirMotorista = async function(id) {
+            if(confirm("Confirma a exclusão deste motorista da base de dados geral?")) {
+                try { await deleteDoc(doc(dbFS, "motoristas", String(id))); } catch(e) { alert("🚫 Erro ao tentar excluir no Firebase."); }
+            }
+        }
         
         window.salvarGuincho = async function() { 
             if(window.postoAtivo === "Aguardando Aprovação") return alert("Acesso restrito à Sala de Triagem.");
@@ -1291,16 +1328,28 @@
             } catch(e) { alert("🚫 Firewall bloqueou a escrita."); }
         }
 
+        // GUINCHOS AGORA MOSTRAM MÁXIMO DE 2 DIAS E POSSUEM FILTRO
         window.listarGuinchos = function() { 
-            const t=document.getElementById('buscaGuincho').value.toLowerCase().trim(); const tb=document.getElementById('tabelaGuinchos'); tb.innerHTML=""; 
+            const t = document.getElementById('buscaGuincho').value.toLowerCase().trim(); 
+            const fStatus = document.getElementById('filtroGuinchosStatus').value;
+            const tb = document.getElementById('tabelaGuinchos'); tb.innerHTML=""; 
             
             if(window.postoAtivo === 'Chefia' && !window.temAcessoTotal()) return;
             
             let guinchosGeral = window.getDB().guinchos; 
             if(!window.temAcessoTotal()) guinchosGeral = guinchosGeral.filter(g => g.criadoPor === window.postoAtivo || g.criadoPor === window.currentUserEmail);
             
+            // LIMITE DE EXIBIÇÃO: ÚLTIMAS 48 HORAS (2 DIAS)
+            const limite2Dias = Date.now() - (2 * 24 * 60 * 60 * 1000);
+            guinchosGeral = guinchosGeral.filter(g => g.id >= limite2Dias);
+
+            // APLICANDO O FILTRO DO DROPDOWN
+            if(fStatus === 'acionados') guinchosGeral = guinchosGeral.filter(g => !g.chegou);
+            if(fStatus === 'finalizados') guinchosGeral = guinchosGeral.filter(g => g.chegou);
+
             let f = t.length === 0 ? guinchosGeral : guinchosGeral.filter(g=>(g.dataShow&&g.dataShow.toLowerCase().includes(t))||(g.motNome&&g.motNome.toLowerCase().includes(t))||(g.placa&&g.placa.toLowerCase().includes(t))||(g.bpm&&g.bpm.toLowerCase().includes(t))||(g.talao&&g.talao.toLowerCase().includes(t)));
-            if(f.length===0){tb.innerHTML="<tr><td colspan='8' style='text-align:center; padding:40px; font-weight:700; color:#a0aec0;'>O scanner não localizou acionamentos em aberto para esta mesa.</td></tr>";return;} 
+            
+            if(f.length===0){tb.innerHTML="<tr><td colspan='8' style='text-align:center; padding:40px; font-weight:700; color:#a0aec0;'>Nenhum acionamento encontrado com os filtros atuais.</td></tr>";return;} 
             
             f.sort((a,b) => String(b.id).localeCompare(String(a.id))).forEach(g=>{
                 let bUser = (window.temAcessoTotal()) && g.criadoPor ? `<br><span style="font-size:10px; color:#718096; background:#edf2f7; padding:3px 6px; border-radius:6px; border:1px solid #cbd5e1; display:inline-block; margin-top:5px;">👤 ${window.eH(g.criadoPor)}</span>` : '';
@@ -1375,6 +1424,9 @@
         window.cancelarEdicaoSiopm = function() { document.getElementById('sId').value = ""; document.getElementById('sBpm').value = ""; document.getElementById('sTalao').value = ""; document.getElementById('sPeriodo').value = "Dia"; document.getElementById('btnSalvarSiopm').innerText = "➕ Gerar Novo Talão Contingencial"; document.getElementById('btnSalvarSiopm').style.background = "#48bb78"; document.getElementById('btnCancelarSiopm').style.display = "none"; }
 
         window.excluirItem = async function(tabela, id) { 
+            // O motorista possui uma exclusão separada agora
+            if(tabela === 'motoristas') return;
+
             let info = window.getDB()[tabela].find(x => String(x.id) === String(id)); if(!info) return;
             if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia' && info.criadoPor !== window.currentUserEmail && info.criadoPor !== window.postoAtivo) { return alert("Alerta de Segurança: Você só possui permissão para desativar arquivos gerados por si próprio."); }
             if(confirm("Deseja realmente pulverizar este registro das matrizes principais do Comando?")) { await deleteDoc(doc(dbFS, tabela, String(id))); window.registrarAuditoria('Desintegrou Registo', `Pacote [${tabela}]`); } 
@@ -1393,14 +1445,14 @@
             emails.forEach(u => {
                 let obj = perfis[u];
                 let hStatus = obj.status === 'pendente' ? '🟡 Fila de Triagem' : obj.status === 'bloqueado' ? '🚫 Cadastro Suspenso' : '✅ Autorizado pelo Comando';
-                let hCargo = u.toLowerCase() === EMAIL_DO_ADMINISTRADOR ? '👑 Proprietário / Master' : `<select onchange="mudarCargo('${window.eH(u)}', this.value)" style="padding: 8px; border-radius: 6px; font-weight: 700;"><option value="admin" ${obj.role==='admin'?'selected':''}>👮 Admin (Total)</option><option value="operador" ${obj.role==='operador'?'selected':''}>✍️ Operador Rádio</option><option value="leitura" ${obj.role==='leitura'?'selected':''}>👁️ Observador Civil</option></select>`;
+                let hCargo = u.toLowerCase() === EMAIL_DO_ADMINISTRADOR ? '👑 Proprietário / Master' : `<select onchange="mudarCargo('${window.eH(u)}', this.value)" style="padding: 8px; border-radius: 6px; font-weight: 700; max-width: 180px;"><option value="admin" ${obj.role==='admin'?'selected':''}>👮 Admin (Total)</option><option value="operador" ${obj.role==='operador'?'selected':''}>✍️ Operador Rádio</option><option value="leitura" ${obj.role==='leitura'?'selected':''}>👁️ Observador Civil</option></select>`;
                 let bAcao = ''; let bExc = '';
                 if (u.toLowerCase() !== EMAIL_DO_ADMINISTRADOR) {
-                    if (obj.status === 'pendente' || obj.status === 'bloqueado') bAcao = `<button class="btn" style="background:#38a169; padding: 10px 18px;" onclick="aprovarUsuario('${window.eH(u)}')">✅ Ativar Ficha</button>`;
-                    else bAcao = `<button class="btn" style="background:#e53e3e; padding: 10px 18px;" onclick="bloquearUsuario('${window.eH(u)}')">🚫 Desabilitar</button>`;
-                    bExc = `<button class="btn btn-del" style="padding: 10px 18px;" onclick="excluirUsuario('${window.eH(u)}')">🗑️ Apagar</button>`;
+                    if (obj.status === 'pendente' || obj.status === 'bloqueado') bAcao = `<button class="btn" style="background:#38a169; padding: 10px 14px;" onclick="aprovarUsuario('${window.eH(u)}')">✅ Ativar Ficha</button>`;
+                    else bAcao = `<button class="btn" style="background:#e53e3e; padding: 10px 14px;" onclick="bloquearUsuario('${window.eH(u)}')">🚫 Desabilitar</button>`;
+                    bExc = `<button class="btn btn-del" style="padding: 10px 14px;" onclick="excluirUsuario('${window.eH(u)}')">🗑️ Apagar</button>`;
                 }
-                tb.innerHTML += `<tr><td style="font-size:15px;"><strong>${window.eH(u)}</strong><br><span style="font-size:11px; color: #718096; font-weight: 700;">Último acesso gravado no satélite: ${window.eH(obj.lastSeen || '-')}</span></td><td><span style="background:#f8fafc; padding:6px 12px; border-radius:6px; border:1px solid #cbd5e1; font-weight:700; font-size:13px;">${hStatus}</span></td><td>${hCargo}</td><td><div style="display:flex; gap:8px;">${bAcao} ${bExc}</div></td></tr>`;
+                tb.innerHTML += `<tr><td style="font-size:15px; word-wrap:break-word;"><strong>${window.eH(u)}</strong><br><span style="font-size:11px; color: #718096; font-weight: 700;">Último acesso gravado no satélite: ${window.eH(obj.lastSeen || '-')}</span></td><td><span style="background:#f8fafc; padding:6px 12px; border-radius:6px; border:1px solid #cbd5e1; font-weight:700; font-size:13px; display:inline-block;">${hStatus}</span></td><td>${hCargo}</td><td><div style="display:flex; flex-wrap:wrap; gap:8px;">${bAcao} ${bExc}</div></td></tr>`;
             });
         }
 
