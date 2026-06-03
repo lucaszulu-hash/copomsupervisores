@@ -1244,22 +1244,22 @@
             document.body.classList.add('printing-individual'); window.print(); document.body.classList.remove('printing-individual'); setTimeout(() => { document.title = tOrig; }, 1000);
         }
 
-        window.listarOcorrencias = function() { 
+      window.listarOcorrencias = function() { 
             const t=document.getElementById('buscaOcorrencia').value.toLowerCase().trim(); const tb=document.getElementById('tabelaOcorrencias'); tb.innerHTML=""; 
             let f = window.getDB().ocorrencias;
             
             if(!window.temAcessoTotal() && window.postoAtivo !== 'Chefia') f = f.filter(o => o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
             if(t.length > 0) { f = f.filter(o=>o.data.includes(t)||o.bpm.toLowerCase().includes(t)||o.talao.toLowerCase().includes(t)||(o.historico&&o.historico.toLowerCase().includes(t))); }
-            if(f.length===0){tb.innerHTML="<tr><td colspan='5' style='text-align:center; padding:40px; font-weight:700; color:#e53e3e;'>A placa de rede não localizou ocorrências no período selecionado.</td></tr>";return;} 
+            if(f.length===0){tb.innerHTML="<tr><td colspan='5' style='text-align:center; padding:30px; font-weight:bold; color:#e53e3e;'>A placa de rede não localizou ocorrências no período selecionado.</td></tr>";return;} 
             
             f.sort((a,b) => String(b.id).localeCompare(String(a.id))).forEach(o=>{
                 let podeEditar = (window.temAcessoTotal() || window.postoAtivo === 'Chefia' || o.criadoPor === window.postoAtivo || o.criadoPor === window.currentUserEmail);
-                let btnEdit = podeEditar ? `<button class="btn btn-edit no-print hide-leitura" onclick="prepararEdicaoOcorrencia('${o.id}')" style="padding: 10px 14px; border-radius: 6px;">✏️ Editar</button>` : '';
-                let btnPdf = podeEditar ? `<button class="btn btn-save no-print" style="background:#2b6cb0; padding:10px 14px; font-size:12px; border-radius: 6px;" onclick="baixarOcorrenciaInd('${o.id}')">🖨️ Extrato PDF</button>` : '';
-                let btnDel = podeEditar ? `<button class="btn btn-del hide-leitura" onclick="excluirItem('ocorrencias', '${o.id}')" style="padding: 10px 14px; border-radius: 6px;">🗑️ Anular</button>` : '';
-                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') && o.criadoPor ? `<div style="font-size:11px; color:#4a5568; background: #e2e8f0; padding:4px 8px; border-radius:12px; margin-top:8px; font-weight:700; display:inline-block; border: 1px solid #cbd5e1;">📍 Posto: ${window.eH(o.criadoPor)}</div>` : '';
+                let btnEdit = podeEditar ? `<button class="btn btn-edit no-print hide-leitura" onclick="prepararEdicaoOcorrencia('${o.id}')" style="padding: 8px 12px; border-radius: 4px;">✏️ Editar</button>` : '';
+                let btnPdf = podeEditar ? `<button class="btn btn-save no-print" style="background:#2b6cb0; padding:8px 12px; font-size:11px; border-radius: 4px;" onclick="baixarOcorrenciaInd('${o.id}')">🖨️ Extrato PDF</button>` : '';
+                let btnDel = podeEditar ? `<button class="btn btn-del hide-leitura" onclick="excluirItem('ocorrencias', '${o.id}')" style="padding: 8px 12px; border-radius: 4px;">🗑️ Anular</button>` : '';
+                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') && o.criadoPor ? `<div style="font-size:10px; color:#4a5568; background: #e2e8f0; padding:2px 6px; border-radius:12px; margin-top:5px; font-weight:bold; display:inline-block; border: 1px solid #cbd5e1;">📍 Posto: ${window.eH(o.criadoPor)}</div>` : '';
 
-                tb.innerHTML+=`<tr><td class="mono-font" style="font-size:15px; font-weight:700;">${window.eH(o.data)}</td><td><span style="background:#edf2f7; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 6px; font-weight: 700; color: #2d3748;">${window.eH(o.bpm)}</span></td><td class="mono-font" style="font-size:15px;">${window.eH(o.talao)}<br>${bUser}</td><td><button class="btn btn-edit no-print" id="btn-hist-${o.id}" style="background:#718096; padding:8px 14px; border-radius:6px; transition: all 0.2s;" onclick="toggleHistorico('${o.id}')">👁️ Ler Relatório</button><div id="full-${o.id}" style="display:none; white-space:pre-wrap; background:#fffaf0; padding:20px; margin-top:15px; border-left:5px solid #d69e2e; border-radius:0 12px 12px 0; color:#2d3748; line-height: 1.6; font-size:15px; box-shadow: var(--shadow-soft);">${window.eH(o.historico)}</div></td><td class="no-print"><div style="display:flex; flex-direction:column; gap:8px;">${btnEdit} ${btnPdf} ${btnDel}</div></td></tr>`;
+                tb.innerHTML+=`<tr><td class="mono-font" style="font-size:14px; font-weight:bold;">${window.eH(o.data)}</td><td><span style="background:#edf2f7; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 4px; font-weight: bold; color: #2d3748; display:inline-block; white-space:nowrap;">${window.eH(o.bpm)}</span></td><td class="mono-font" style="font-size:14px;">${window.eH(o.talao)}<br>${bUser}</td><td><button class="btn btn-edit no-print" id="btn-hist-${o.id}" style="background:#718096; padding:6px 12px; border-radius:4px; transition: all 0.2s;" onclick="toggleHistorico('${o.id}')">👁️ Ler Relatório</button><div id="full-${o.id}" style="display:none; white-space:pre-wrap; background:#fffaf0; padding:15px; margin-top:10px; border-left:4px solid #d69e2e; border-radius:0 8px 8px 0; color:#2d3748; line-height: 1.5; font-size:14px; box-shadow: var(--shadow-soft);">${window.eH(o.historico)}</div></td><td class="no-print"><div style="display:flex; flex-direction:column; gap:6px;">${btnEdit} ${btnPdf} ${btnDel}</div></td></tr>`;
             }); 
         }
         window.toggleHistorico = function(id) { let f=document.getElementById('full-'+id); let b=document.getElementById('btn-hist-'+id); if(f.style.display==='none'){f.style.display='block';b.innerHTML='🙈 Ocultar Leitura'; b.style.background="#4a5568";}else{f.style.display='none';b.innerHTML='👁️ Ler Relatório'; b.style.background="#718096";} }
@@ -1396,7 +1396,7 @@
             } 
         }
 
-        window.listarSiopm = function() { 
+       window.listarSiopm = function() { 
             const tb=document.getElementById('tabelaSiopm'); tb.innerHTML=""; 
             const fB=document.getElementById('filtroSiopmBpm').value; const fS=document.getElementById('filtroSiopmStatus').value; const dataHoje = window.getDataHoje();
 
@@ -1405,21 +1405,20 @@
                 return visivelParaOperador && (fB === 'todos' || s.bpm === fB) && (fS === 'todos' || s.status === fS);
             });
 
-            if(f.length===0){ tb.innerHTML="<tr><td colspan='7' style='text-align:center; padding:40px; font-weight:700; color:#718096;'>O banco de dados não acusou inoperância do SIOPM neste turno.</td></tr>"; window.atualizarDashboard(); return; } 
+            if(f.length===0){ tb.innerHTML="<tr><td colspan='7' style='text-align:center; padding:30px; font-weight:bold; color:#718096;'>O banco de dados não acusou inoperância do SIOPM neste turno.</td></tr>"; window.atualizarDashboard(); return; } 
             
             f.sort((a,b) => String(b.id).localeCompare(String(a.id))).forEach(s=>{
-                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<br><span style="font-size:10px; color:#4a5568; background:#edf2f7; padding:4px 8px; border-radius:6px; display:inline-block; margin-top:6px; border:1px solid #cbd5e1; font-weight:700;">📍 Posto: ${window.eH(s.criadoPor)}</span>` : '';
+                let bUser = (window.temAcessoTotal() || window.postoAtivo === 'Chefia') ? `<br><span style="font-size:9px; color:#4a5568; background:#edf2f7; padding:2px 6px; border-radius:4px; display:inline-block; margin-top:4px; border:1px solid #cbd5e1;">📍 Posto: ${window.eH(s.criadoPor)}</span>` : '';
                 
                 let podeEditar = (window.temAcessoTotal() || window.postoAtivo === 'Chefia' || s.criadoPor === window.postoAtivo || s.criadoPor === window.currentUserEmail);
-                let btnHtml = podeEditar ? `<button class="btn-action hide-leitura btn ${s.status==="Aberto"?"btn-save":"btn-print"}" style="padding: 10px 14px; margin-right: 8px; font-size: 12px; border-radius:6px;" onclick="encerrarOuReabrirSiopm('${s.id}')">${s.status==="Aberto"?"🔓 Dar Baixa":"🔒 Estornar"}</button> <button class="btn-action btn-del hide-leitura" style="padding: 10px 14px; border-radius:6px;" onclick="excluirItem('siopm', '${s.id}')">🗑️</button>` : '';
+                let btnHtml = podeEditar ? `<button class="btn-action hide-leitura btn ${s.status==="Aberto"?"btn-save":"btn-print"}" style="padding: 6px 12px; margin-right: 5px; font-size: 11px;" onclick="encerrarOuReabrirSiopm('${s.id}')">${s.status==="Aberto"?"🔓 Dar Baixa":"🔒 Estornar"}</button> <button class="btn-action btn-del hide-leitura" style="padding: 6px 12px;" onclick="excluirItem('siopm', '${s.id}')">🗑️</button>` : '';
                 
-                let desfechoEstilo = s.desfecho ? `color:#166534; font-weight:700; background:#f0fdf4; padding:6px 12px; border-radius:6px; border:1px solid #86efac; display:inline-block; font-size:13px;` : `color:#a0aec0; font-style:italic; font-size:13px;`;
+                let desfechoEstilo = s.desfecho ? `color:#166534; font-weight:bold; background:#f0fdf4; padding:4px 8px; border-radius:4px; border:1px solid #86efac; display:inline-block;` : `color:#a0aec0; font-style:italic;`;
 
-                tb.innerHTML+=`<tr class="${s.status==='Aberto'?'row-urgente':'row-sucesso'}"><td class="mono-font" style="font-size:15px; font-weight:700;">${window.eH(s.data)}${bUser}</td><td><span style="background:#f8fafc; border:1px solid #cbd5e1; padding:6px 10px; border-radius:6px; font-weight:700; color:#2b6cb0;">${window.eH(s.bpm)}</span></td><td class="mono-font" style="font-size:16px; color:#1a202c;">${window.eH(s.talao)}</td><td><span style="background:#edf2f7; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:700;">${window.eH(s.periodo)}</span></td><td><span style="${desfechoEstilo}">${window.eH(s.desfecho||'AGUARDANDO FINALIZAÇÃO TÁTICA')}</span></td><td><span class="badge-siopm ${s.status==="Aberto"?"badge-aberto":"badge-encerrado"}" style="box-shadow:var(--shadow-soft); padding:8px 14px; font-size:13px;">${window.eH(s.status)}</span></td><td class="no-print">${btnHtml}</td></tr>`;
+                tb.innerHTML+=`<tr><td class="mono-font" style="font-size:14px; font-weight:bold;">${window.eH(s.data)}${bUser}</td><td><span style="background:#f8fafc; border:1px solid #cbd5e1; padding:6px 10px; border-radius:4px; font-weight:bold; color:#2b6cb0; display:inline-block; white-space:nowrap;">${window.eH(s.bpm)}</span></td><td class="mono-font" style="font-size:15px; color:#1a202c;">${window.eH(s.talao)}</td><td><span style="background:#edf2f7; padding:2px 6px; border-radius:12px; font-size:11px; font-weight:bold;">${window.eH(s.periodo)}</span></td><td><span style="${desfechoEstilo}">${window.eH(s.desfecho||'AGUARDANDO FINALIZAÇÃO TÁTICA')}</span></td><td><span class="badge-siopm ${s.status==="Aberto"?"badge-aberto":"badge-encerrado"}" style="box-shadow:var(--shadow-soft); padding:6px 12px;">${window.eH(s.status)}</span></td><td class="no-print">${btnHtml}</td></tr>`;
             }); 
             window.atualizarDashboard(); 
         }
-
         window.prepararEdicaoSiopm = function(id) { let i = window.getDB().siopm.find(x => String(x.id) === String(id)); if(!i) return; document.getElementById('sId').value = i.id; document.getElementById('sBpm').value = i.bpm; document.getElementById('sTalao').value = i.talao; document.getElementById('sPeriodo').value = i.periodo; document.getElementById('btnSalvarSiopm').innerText = "💾 Forçar Atualização"; document.getElementById('btnSalvarSiopm').style.background = "#d69e2e"; document.getElementById('btnCancelarSiopm').style.display = "block"; window.scrollTo({top: 0, behavior: 'smooth'}); }
         window.cancelarEdicaoSiopm = function() { document.getElementById('sId').value = ""; document.getElementById('sBpm').value = ""; document.getElementById('sTalao').value = ""; document.getElementById('sPeriodo').value = "Dia"; document.getElementById('btnSalvarSiopm').innerText = "➕ Gerar Novo Talão Contingencial"; document.getElementById('btnSalvarSiopm').style.background = "#48bb78"; document.getElementById('btnCancelarSiopm').style.display = "none"; }
 
